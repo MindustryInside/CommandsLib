@@ -5,14 +5,15 @@ import arc.util.CommandHandler;
 import arc.util.Log;
 import inside.commands.params.IntParameter;
 import inside.commands.params.InvalidNumberException;
+import inside.commands.params.StringParameter;
 import inside.commands.params.keys.MandatoryKey;
 import inside.commands.params.keys.OptionalKey;
 import inside.commands.params.keys.OptionalVariadicKey;
 
 import java.util.Optional;
 
-public final class CommandLib {
-    static final MandatoryKey<Integer> amount = MandatoryKey.of("amount", Integer.class);
+class CommandLib {
+    static final MandatoryKey<String> name = MandatoryKey.of("name", String.class);
     static final OptionalKey<Integer> age = OptionalKey.of("age", Integer.class);
     static final OptionalVariadicKey<Integer> dates = OptionalVariadicKey.of("dates", Integer.class);
 
@@ -21,17 +22,12 @@ public final class CommandLib {
         CommandManager manager = new CommandManager(handler);
         manager.register("test")
                 .description("description")
-                .parameter(IntParameter.from(amount))
+                .parameter(StringParameter.from(name))
                 .parameter(IntParameter.from(age))
                 .parameter(IntParameter.from(dates))
                 .handler(ctx -> {
-                    try {
-                        Integer mandatory = ctx.get(amount);
-                        Log.info("mandatory: @", mandatory);
-                    } catch (InvalidNumberException e) {
-                        String msg = e.localise(ctx.player());
-                        Log.err("1> " + msg);
-                    }
+                    String mandatory = ctx.get(name);
+                    Log.info("mandatory: '@'", mandatory);
 
                     try {
                         Optional<Integer> optional = ctx.get(age);
@@ -50,7 +46,7 @@ public final class CommandLib {
                     }
                 });
 
-        var res = handler.handleMessage("/test 1 3 44 4 45");
+        var res = handler.handleMessage("/test text 3 44 4 45");
         if (res.type != CommandHandler.ResponseType.valid) {
             Log.info(res.type);
         }
