@@ -2,11 +2,11 @@ package inside.commands.params;
 
 import mindustry.gen.Player;
 
-public class InvalindNumberException extends InvalidParameterException {
+public class InvalidNumberException extends InvalidParameterException {
 
     private final String value;
 
-    public InvalindNumberException(String value) {
+    public InvalidNumberException(String value) {
         this.value = value;
     }
 

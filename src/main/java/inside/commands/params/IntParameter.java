@@ -24,7 +24,7 @@ public class IntParameter extends BaseParameter<Integer> {
         try {
             return Integer.parseInt(value);
         } catch (NumberFormatException e) {
-            throw new InvalindNumberException(value);
+            throw new InvalidNumberException(value);
         }
     }
 }

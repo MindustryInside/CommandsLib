@@ -4,7 +4,7 @@ import arc.struct.Seq;
 import arc.util.CommandHandler;
 import arc.util.Log;
 import inside.commands.params.IntParameter;
-import inside.commands.params.InvalindNumberException;
+import inside.commands.params.InvalidNumberException;
 import inside.commands.params.keys.MandatoryKey;
 import inside.commands.params.keys.OptionalKey;
 import inside.commands.params.keys.OptionalVariadicKey;
@@ -28,7 +28,7 @@ public final class CommandLib {
                     try {
                         Integer mandatory = ctx.get(amount);
                         Log.info("mandatory: @", mandatory);
-                    } catch (InvalindNumberException e) {
+                    } catch (InvalidNumberException e) {
                         String msg = e.localise(ctx.player());
                         Log.err("1> " + msg);
                     }
@@ -36,7 +36,7 @@ public final class CommandLib {
                     try {
                         Optional<Integer> optional = ctx.get(age);
                         Log.info("optional: @", optional);
-                    } catch (InvalindNumberException e) {
+                    } catch (InvalidNumberException e) {
                         String msg = e.localise(ctx.player());
                         Log.err("2> " + msg);
                     }
@@ -44,7 +44,7 @@ public final class CommandLib {
                     try {
                         Optional<Seq<Integer>> variadic = ctx.get(dates);
                         Log.info("variadic: @", variadic);
-                    } catch (InvalindNumberException e) {
+                    } catch (InvalidNumberException e) {
                         String msg = e.localise(ctx.player());
                         Log.err("3> " + msg);
                     }

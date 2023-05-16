@@ -2,6 +2,7 @@ package inside.commands;
 
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
+import arc.util.Nullable;
 import inside.commands.params.InvalidParameterException;
 import inside.commands.params.keys.*;
 import mindustry.gen.Player;
@@ -17,6 +18,7 @@ public final class CommandContext {
         this.parameters = parameters;
     }
 
+    @Nullable // if it is server command
     public Player player() {
         return player;
     }
