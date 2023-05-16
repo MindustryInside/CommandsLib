@@ -1,16 +1,25 @@
 plugins {
-    id("java")
+    java
 }
 
-group = "inside"
-version = "1.0-BETA"
+version = "1.0.0"
 
 repositories {
+    mavenLocal()
     mavenCentral()
-    maven(url = "https://www.jitpack.io")
+    maven("https://www.jitpack.io")
 }
 
+val mindustryVerion = "v144"
+val usefulHash = "6609aa9b6c"
+
 dependencies {
-    implementation("com.github.Anuken.Arc:arc-core:v144")
-    implementation("com.github.Anuken.Mindustry:core:v144")
+    implementation("com.github.Anuken.Arc:arc-core:$mindustryVerion")
+    implementation("com.github.Anuken.Mindustry:core:$mindustryVerion")
+    implementation("com.github.xzxadixzx.useful-stuffs:bundle:$usefulHash")
+    implementation("com.github.xzxadixzx.useful-stuffs:menu:$usefulHash")
+}
+
+tasks.withType<JavaCompile> {
+    options.release.set(17)
 }
