@@ -4,8 +4,6 @@ import inside.commands.params.keys.OptionalKey;
 import inside.commands.params.keys.ParameterKey;
 import inside.commands.params.keys.VariadicKey;
 
-import java.util.Objects;
-
 public abstract class BaseParameter<T> implements Parameter<T> {
 
     protected final String name;
@@ -22,12 +20,6 @@ public abstract class BaseParameter<T> implements Parameter<T> {
         this.name = key.name();
         this.optional = key instanceof OptionalKey<T>;
         this.variadic = key instanceof VariadicKey<T>;
-    }
-
-    protected BaseParameter(String name, boolean optional, boolean variadic) {
-        this.name = Objects.requireNonNull(name);
-        this.optional = optional;
-        this.variadic = variadic;
     }
 
     @Override

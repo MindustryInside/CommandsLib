@@ -2,6 +2,7 @@ package inside.commands;
 
 import arc.func.Cons;
 import arc.struct.ObjectMap;
+import arc.struct.ObjectSet;
 import arc.struct.Seq;
 import arc.util.CommandHandler;
 import arc.util.Log;
@@ -19,12 +20,24 @@ public final class CommandBuilder {
     private final String name;
     private final Seq<Parameter<?>> parameters = new Seq<>();
 
+    private Cons<CommandContext> handler;
+    private Seq<String> aliases;
     private boolean hadOptional;
     private String description;
 
     CommandBuilder(CommandManager manager, String name) {
         this.manager = manager;
         this.name = Objects.requireNonNull(name);
+    }
+
+    public CommandBuilder aliases(String... aliases) {
+        this.aliases = Seq.with(aliases);
+        return this;
+    }
+
+    public CommandBuilder aliases(Iterable<String> aliases) {
+        this.aliases = Seq.with(aliases);
+        return this;
     }
 
     public CommandBuilder description(String description){
@@ -49,39 +62,50 @@ public final class CommandBuilder {
     }
 
     public void handler(Cons<CommandContext> handler) {
-        StringJoiner paramString = new StringJoiner(" ");
+        this.handler = handler;
+
+        StringJoiner paramSj = new StringJoiner(" ");
         for (var p : parameters) {
-            paramString.add(parameterAsString(p));
+            paramSj.add(parameterAsString(p));
         }
 
-        manager.handler.<Player>register(name, paramString.toString(), description, (args, player) -> {
-            Locale locale = player != null ? manager.bundleProvider.getLocale(player) : manager.locale;
-            var parsedParams = new ObjectMap<String, Object>();
-            for (int i = 0; i < args.length; i++) {
-                var p = parameters.get(i);
-                if (p instanceof VariadicParameter<?> v) {
-                    try {
-                        parsedParams.put(p.name(), v.parseMultiple(args[i]));
-                    } catch (InvalidParameterException e) {
-                        String msg = e.localise(locale);
+        String paramString = paramSj.toString();
 
-                        Log.err(msg);
-                        return;
-                    }
-                } else {
-                    try {
-                        parsedParams.put(p.name(), p.parse(args[i]));
-                    } catch (InvalidParameterException e) {
-                        String msg = e.localise(locale);
+        manager.handler.register(name, paramString, description, this::run);
+        if (aliases != null) {
+            for (String alias : aliases) {
+                manager.handler.register(alias, paramString, description, this::run);
+            }
+        }
+    }
 
-                        Log.err(msg);
-                        return;
-                    }
+    private void run(String[] args, Player player) {
+        Locale locale = player != null ? manager.bundleProvider.getLocale(player) : manager.locale;
+        var parsedParams = new ObjectMap<String, Object>();
+        for (int i = 0; i < args.length; i++) {
+            var p = parameters.get(i);
+            if (p instanceof VariadicParameter<?> v) {
+                try {
+                    parsedParams.put(p.name(), v.parseMultiple(args[i]));
+                } catch (InvalidParameterException e) {
+                    String msg = e.localise(locale);
+
+                    Log.err(msg);
+                    return;
+                }
+            } else {
+                try {
+                    parsedParams.put(p.name(), p.parse(args[i]));
+                } catch (InvalidParameterException e) {
+                    String msg = e.localise(locale);
+
+                    Log.err(msg);
+                    return;
                 }
             }
+        }
 
-            handler.get(new CommandContext(locale, player, parsedParams));
-        });
+        handler.get(new CommandContext(locale, player, parsedParams));
     }
 
     static String parameterAsString(Parameter<?> param) {

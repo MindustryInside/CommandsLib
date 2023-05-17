@@ -5,7 +5,6 @@ import arc.util.CommandHandler;
 import arc.util.Log;
 import inside.commands.CommandManager;
 import inside.commands.params.IntParameter;
-import inside.commands.params.InvalidNumberException;
 import inside.commands.params.StringParameter;
 import inside.commands.params.keys.MandatoryKey;
 import inside.commands.params.keys.OptionalKey;
@@ -14,15 +13,17 @@ import inside.commands.params.keys.OptionalVariadicKey;
 import java.util.Optional;
 
 class CommandLib {
+    static final CommandHandler handler = new CommandHandler("/");
+
     static final MandatoryKey<String> name = MandatoryKey.of("name");
     static final OptionalKey<Integer> age = OptionalKey.of("age");
     static final OptionalVariadicKey<Integer> dates = OptionalVariadicKey.of("dates");
 
     public static void main(String[] args) {
-        CommandHandler handler = new CommandHandler("/");
         CommandManager manager = new CommandManager(handler);
         manager.register("test")
                 .description("description")
+                .aliases("t", "cmd")
                 .parameter(StringParameter.from(name))
                 .parameter(IntParameter.from(age)
                         .withMinValue(13)
@@ -39,7 +40,12 @@ class CommandLib {
                     Log.info("variadic: @", variadic);
                 });
 
-        var res = handler.handleMessage("/test text 12");
+        performCommand("/test t1");
+        performCommand("/t t2");
+    }
+
+    static void performCommand(String text) {
+        var res = handler.handleMessage(text);
         if (res.type != CommandHandler.ResponseType.valid) {
             Log.info(res.type);
         }
