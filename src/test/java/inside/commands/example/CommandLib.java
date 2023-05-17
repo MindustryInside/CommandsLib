@@ -12,6 +12,7 @@ import inside.commands.params.keys.MandatoryKey;
 import inside.commands.params.keys.OptionalKey;
 import inside.commands.params.keys.OptionalVariadicKey;
 import mindustry.gen.Player;
+import mindustry.mod.Plugin;
 
 import java.util.Optional;
 

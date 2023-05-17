@@ -9,15 +9,33 @@ import java.util.Objects;
 
 public final class CommandManager {
 
-     final CommandHandler serverHandler;
-     final CommandHandler clientHandler;
+     CommandHandler serverHandler;
+     CommandHandler clientHandler;
 
      MessageService.Factory messageServiceFactory = SimpleMessageService.factory();
      Locale consoleLocale = Locale.ROOT;
      BundleProvider bundleProvider = SimpleBundleProvider.INSTANCE;
 
+     public CommandManager() {}
+
      public CommandManager(CommandHandler serverHandler, CommandHandler clientHandler) {
           this.serverHandler = Objects.requireNonNull(serverHandler);
+          this.clientHandler = Objects.requireNonNull(clientHandler);
+     }
+
+     public void setServerHandler(CommandHandler serverHandler) {
+          if (this.serverHandler != null) {
+               throw new IllegalStateException("Server handler cant be replaced");
+          }
+
+          this.serverHandler = Objects.requireNonNull(serverHandler);
+     }
+
+     public void setClientHandler(CommandHandler clientHandler) {
+          if (this.clientHandler != null) {
+               throw new IllegalStateException("Client handler cant be replaced");
+          }
+
           this.clientHandler = Objects.requireNonNull(clientHandler);
      }
 
@@ -36,11 +54,20 @@ public final class CommandManager {
           return this;
      }
 
+     private void validate() {
+          if (serverHandler == null)
+               throw new IllegalStateException("Server handler not specified");
+          if (clientHandler == null)
+               throw new IllegalStateException("Client handler not specified");
+     }
+
      public ClientCommandBuilder registerClient(String name) {
+          validate();
           return new ClientCommandBuilder(this, name);
      }
 
      public ServerCommandBuilder registerServer(String name) {
+          validate();
           return new ServerCommandBuilder(this, name);
      }
 }

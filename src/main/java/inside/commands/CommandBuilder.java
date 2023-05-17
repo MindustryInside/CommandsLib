@@ -12,7 +12,7 @@ public abstract sealed class CommandBuilder permits ServerCommandBuilder, Client
 
     Seq<String> aliases;
     boolean hadOptional;
-    String description;
+    String description = "";
 
     CommandBuilder(CommandManager manager, String name) {
         this.manager = manager;
@@ -29,12 +29,12 @@ public abstract sealed class CommandBuilder permits ServerCommandBuilder, Client
         return this;
     }
 
-    public CommandBuilder description(String description){
+    public CommandBuilder description(String description) {
         this.description = Objects.requireNonNull(description);
         return this;
     }
 
-    public CommandBuilder parameter(Parameter<?> param){
+    public CommandBuilder parameter(Parameter<?> param) {
         Objects.requireNonNull(param);
         if (hadOptional && !param.optional()) {
             throw new IllegalArgumentException("Mandatory parameter cant follow after optional one");

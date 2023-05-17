@@ -7,10 +7,18 @@ public sealed interface OptionalVariadicKey<T> extends OptionalKey<T>, VariadicK
     static <T> OptionalVariadicKey<T> of(String name) {
         return new OptionalVariadicKeyImpl<>(name);
     }
+
+    @Override
+    OptionalKey<T> asSingle();
 }
 
 record OptionalVariadicKeyImpl<T>(String name) implements OptionalVariadicKey<T> {
     OptionalVariadicKeyImpl {
         Objects.requireNonNull(name);
+    }
+
+    @Override
+    public OptionalKey<T> asSingle() {
+        return new OptionalKeyImpl<>(name);
     }
 }
