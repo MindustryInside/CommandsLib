@@ -1,6 +1,7 @@
 package inside.commands;
 
 import arc.util.CommandHandler;
+import inside.commands.impl.SimpleBundleProvider;
 import inside.commands.impl.SimpleMessageService;
 
 import java.util.Locale;
@@ -13,7 +14,7 @@ public final class CommandManager {
 
      MessageService.Factory messageServiceFactory = SimpleMessageService.factory();
      Locale consoleLocale = Locale.ROOT;
-     BundleProvider bundleProvider;
+     BundleProvider bundleProvider = SimpleBundleProvider.INSTANCE;
 
      public CommandManager(CommandHandler serverHandler, CommandHandler clientHandler) {
           this.serverHandler = Objects.requireNonNull(serverHandler);

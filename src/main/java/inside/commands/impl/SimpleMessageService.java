@@ -4,12 +4,10 @@ import arc.util.Log;
 import inside.commands.BundleProvider;
 import inside.commands.ClientMessageService;
 import inside.commands.MessageService;
-import mindustry.gen.BlockSnapshotCallPacket;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
 
 import java.util.Locale;
-import java.util.Objects;
 
 public class SimpleMessageService implements ClientMessageService {
 
@@ -62,11 +60,8 @@ public class SimpleMessageService implements ClientMessageService {
     // ============================
 
     @Override
-    public void sendAnnounce(String format, Object... values) {
-        Objects.requireNonNull(player);
-
-        String bundled = bundleProvider.format(locale, format, values);
-        Call.announce(player.con, bundled);
+    public Player player() {
+        return player;
     }
 
     @Override

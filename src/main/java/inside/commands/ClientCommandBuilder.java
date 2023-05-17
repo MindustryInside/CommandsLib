@@ -9,6 +9,7 @@ import inside.commands.params.VariadicParameter;
 import mindustry.gen.Player;
 
 import java.util.Locale;
+import java.util.Objects;
 import java.util.StringJoiner;
 
 public final class ClientCommandBuilder extends CommandBuilder {
@@ -62,6 +63,8 @@ public final class ClientCommandBuilder extends CommandBuilder {
     }
 
     private void run(Cons<ClientCommandContext> handler, String[] args, Player player) {
+        Objects.requireNonNull(player, "player must be present for client commands");
+
         Locale locale = manager.bundleProvider.getLocale(player);
         ClientMessageService messageService = manager.messageServiceFactory.createClient(manager.bundleProvider, player);
         if (admin && !player.admin) {

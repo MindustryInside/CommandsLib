@@ -37,12 +37,12 @@ class CustomParamExample {
 
     public static void main(String[] args) {
         CommandManager manager = new CommandManager(commonHandler, commonHandler);
-        manager.registerClient("get")
+        manager.registerServer("get")
                 .description("desc")
                 .parameter(CustomParameter.from(name))
                 .handler(ctx -> {
                     String role = ctx.get(name);
-                    Log.info("Found role: '@'", role);
+                    ctx.messageService().sendMessage("Found role: {0}", role);
                 });
 
         performCommand("/get skat");
@@ -85,7 +85,7 @@ class CustomParamExample {
 
         @Override
         public void report(MessageService messageService) {
-            messageService.sendError("Oh no! No admin with name '@' found!", name);
+            messageService.sendError("Oh no! No admin with name {0} found!", name);
         }
     }
 }

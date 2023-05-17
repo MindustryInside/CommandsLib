@@ -31,19 +31,19 @@ class CommandLib {
                 .parameter(IntParameter.from(dates))
                 .handler(serverCtx -> {
                     String mandatory = serverCtx.get(name);
-                    Log.info("mandatory: '@'", mandatory);
+                    serverCtx.messageService().sendMessage("mandatory: {0}", mandatory);
 
                     {
                         Optional<Integer> optional = serverCtx.get(age);
                         int defaultValue = serverCtx.get(age, -1);
                         int defaultValueFromProv = serverCtx.getOrDefault(age, () -> -1);
-                        Log.info("optional: @", optional);
+                        serverCtx.messageService().sendMessage("optional: {0}", optional);
                     }
 
                     Optional<Seq<Integer>> variadic = serverCtx.get(dates);
                     Seq<Integer> defaultValue = serverCtx.get(dates, Seq.with());
                     Seq<Integer> defaultValueFromProv = serverCtx.getOrDefault(dates, () -> new Seq<>());
-                    Log.info("variadic: @", variadic);
+                    serverCtx.messageService().sendMessage("variadic: {0}", variadic);
                 });
 
         performCommand("/test t1");
