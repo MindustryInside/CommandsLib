@@ -6,6 +6,8 @@ import java.util.Locale;
 
 public interface BundleProvider {
 
+    String errorsPrefix();
+
     Locale getLocale(Player player);
 
     String get(Locale locale, String key);

@@ -9,10 +9,9 @@ public final class ClientCommandContext extends CommandContext {
 
     private final Player player;
 
-    ClientCommandContext(Locale locale, BundleProvider bundleProvider,
-                         ObjectMap<String, ?> parameters, Player player,
+    ClientCommandContext(Locale locale, ObjectMap<String, ?> parameters, Player player,
                          ClientMessageService messageService) {
-        super(locale, bundleProvider, parameters, messageService);
+        super(locale, parameters, messageService);
         this.player = player;
     }
 

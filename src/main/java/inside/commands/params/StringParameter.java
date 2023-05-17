@@ -20,7 +20,7 @@ public class StringParameter extends BaseParameter<String> {
     }
 
     @Override
-    public String parse(MessageService messageService, String value) {
+    public String parse(MessageService service, String value) {
         return value;
     }
 }

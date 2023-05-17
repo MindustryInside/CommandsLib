@@ -10,5 +10,5 @@ public interface Parameter<T> {
 
     boolean variadic();
 
-    T parse(MessageService messageService, String value);
+    T parse(MessageService service, String value);
 }

@@ -14,31 +14,36 @@ public class SimpleMessageService implements ClientMessageService {
     public static Factory factory() {
         return new Factory() {
             @Override
-            public ClientMessageService createClient(BundleProvider bundleProvider, Player player) {
-                Locale locale = bundleProvider.getLocale(player);
-                return new SimpleMessageService(bundleProvider, locale, player);
+            public ClientMessageService createClient(BundleProvider bundle, Player player) {
+                Locale locale = bundle.getLocale(player);
+                return new SimpleMessageService(bundle, locale, player);
             }
 
             @Override
-            public MessageService createServer(BundleProvider bundleProvider, Locale locale) {
-                return new SimpleMessageService(bundleProvider, locale, null);
+            public MessageService createServer(BundleProvider bundle, Locale locale) {
+                return new SimpleMessageService(bundle, locale, null);
             }
         };
     }
 
-    private final BundleProvider bundleProvider;
+    private final BundleProvider bundle;
     private final Locale locale;
     private final Player player;
 
-    SimpleMessageService(BundleProvider bundleProvider, Locale locale, Player player) {
-        this.bundleProvider = bundleProvider;
+    SimpleMessageService(BundleProvider bundle, Locale locale, Player player) {
+        this.bundle = bundle;
         this.locale = locale;
         this.player = player;
     }
 
     @Override
+    public BundleProvider bundle() {
+        return bundle;
+    }
+
+    @Override
     public void sendError(String format, Object... values) {
-        String bundled = bundleProvider.format(locale, format, values);
+        String bundled = bundle.format(locale, format, values);
         if (player != null) {
             player.sendMessage(bundled);
         } else {
@@ -48,7 +53,7 @@ public class SimpleMessageService implements ClientMessageService {
 
     @Override
     public void sendMessage(String format, Object... values) {
-        String bundled = bundleProvider.format(locale, format, values);
+        String bundled = bundle.format(locale, format, values);
         if (player != null) {
             player.sendMessage(bundled);
         } else {
@@ -66,15 +71,15 @@ public class SimpleMessageService implements ClientMessageService {
 
     @Override
     public void sendAnnounce(Player target, String format, Object... values) {
-        Locale locale = bundleProvider.getLocale(target);
-        String bundled = bundleProvider.format(locale, format, values);
+        Locale locale = bundle.getLocale(target);
+        String bundled = bundle.format(locale, format, values);
         Call.announce(target.con, bundled);
     }
 
     @Override
     public void sendMessage(Player target, String format, Object... values) {
-        Locale locale = bundleProvider.getLocale(target);
-        String bundled = bundleProvider.format(locale, format, values);
+        Locale locale = bundle.getLocale(target);
+        String bundled = bundle.format(locale, format, values);
         target.sendMessage(bundled);
     }
 }

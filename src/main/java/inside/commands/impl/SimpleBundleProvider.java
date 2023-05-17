@@ -10,6 +10,11 @@ public enum SimpleBundleProvider implements BundleProvider {
     INSTANCE;
 
     @Override
+    public String errorsPrefix() {
+        return "commands";
+    }
+
+    @Override
     public Locale getLocale(Player player) {
         return Locale.ROOT;
     }

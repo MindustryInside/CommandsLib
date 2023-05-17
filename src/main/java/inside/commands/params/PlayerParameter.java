@@ -51,7 +51,7 @@ public class PlayerParameter extends BaseParameter<Player> {
     }
 
     @Override
-    public Player parse(MessageService messageService, String value) {
+    public Player parse(MessageService service, String value) {
         String transformed = value;
         if (options.contains(SearchOption.STRIP_COLORS_AND_GLYPHS)) {
             transformed = stripAll(value);
@@ -70,7 +70,7 @@ public class PlayerParameter extends BaseParameter<Player> {
             }
         }
 
-        messageService.sendError("No player with name {0} found", value);
+        service.sendError(service.error("player-not-found"), value);
         return null;
     }
 

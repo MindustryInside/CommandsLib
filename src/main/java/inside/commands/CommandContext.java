@@ -10,24 +10,17 @@ import java.util.Optional;
 
 public abstract sealed class CommandContext permits ClientCommandContext, ServerCommandContext {
     private final Locale locale;
-    private final BundleProvider bundleProvider;
     private final ObjectMap<String, ?> parameters;
     private final MessageService messageService;
 
-    CommandContext(Locale locale, BundleProvider bundleProvider,
-                   ObjectMap<String, ?> parameters, MessageService messageService) {
+    CommandContext(Locale locale, ObjectMap<String, ?> parameters, MessageService messageService) {
         this.locale = locale;
-        this.bundleProvider = bundleProvider;
         this.parameters = parameters;
         this.messageService = messageService;
     }
 
     public Locale locale() {
         return locale;
-    }
-
-    public BundleProvider bundleProvider() {
-        return bundleProvider;
     }
 
     public MessageService messageService() {

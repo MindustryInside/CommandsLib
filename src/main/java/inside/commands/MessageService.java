@@ -6,7 +6,11 @@ import java.util.Locale;
 
 public interface MessageService {
 
-    String ADMIN_ONLY_COMMAND = "commands.admin-only";
+    default String error(String key) {
+        return bundle().errorsPrefix() + '.' + key;
+    }
+
+    BundleProvider bundle();
 
     void sendError(String format, Object... values);
 
@@ -14,8 +18,8 @@ public interface MessageService {
 
     interface Factory {
 
-        ClientMessageService createClient(BundleProvider bundleProvider, Player player);
+        ClientMessageService createClient(BundleProvider bundle, Player player);
 
-        MessageService createServer(BundleProvider bundleProvider, Locale locale);
+        MessageService createServer(BundleProvider bundle, Locale locale);
     }
 }

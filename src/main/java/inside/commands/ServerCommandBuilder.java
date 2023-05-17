@@ -67,7 +67,6 @@ public final class ServerCommandBuilder extends CommandBuilder {
             parsedParams.put(p.name(), parsed);
         }
 
-        handler.get(new ServerCommandContext(manager.consoleLocale,
-                manager.bundleProvider, parsedParams, messageService));
+        handler.get(new ServerCommandContext(manager.consoleLocale, parsedParams, messageService));
     }
 }

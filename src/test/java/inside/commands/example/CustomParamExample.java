@@ -66,10 +66,10 @@ class CustomParamExample {
         }
 
         @Override
-        public String parse(MessageService messageService, String value) {
+        public String parse(MessageService service, String value) {
             String role = getRole(value);
             if (role == null) {
-                messageService.sendError("Oh no! No admin with name {0} found!", name);
+                service.sendError(service.error("invalid-name"), name);
                 return null;
             }
             return role;

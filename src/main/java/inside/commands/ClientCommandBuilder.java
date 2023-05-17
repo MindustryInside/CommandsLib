@@ -67,7 +67,7 @@ public final class ClientCommandBuilder extends CommandBuilder {
         Locale locale = manager.bundleProvider.getLocale(player);
         ClientMessageService messageService = manager.messageServiceFactory.createClient(manager.bundleProvider, player);
         if (admin && !player.admin) {
-            messageService.sendError(MessageService.ADMIN_ONLY_COMMAND);
+            messageService.sendError(messageService.error("admin-only"));
             return;
         }
 
@@ -85,7 +85,6 @@ public final class ClientCommandBuilder extends CommandBuilder {
             parsedParams.put(p.name(), parsed);
         }
 
-        handler.get(new ClientCommandContext(locale, manager.bundleProvider, parsedParams,
-                player, messageService));
+        handler.get(new ClientCommandContext(locale, parsedParams, player, messageService));
     }
 }

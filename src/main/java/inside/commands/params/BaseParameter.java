@@ -39,7 +39,7 @@ public abstract class BaseParameter<T> implements Parameter<T> {
     }
 
     @Override
-    public abstract T parse(MessageService messageService, String value);
+    public abstract T parse(MessageService service, String value);
 
     @Override
     public String toString() {

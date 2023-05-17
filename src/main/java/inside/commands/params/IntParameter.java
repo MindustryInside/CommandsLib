@@ -58,21 +58,21 @@ public class IntParameter extends BaseParameter<Integer> {
     }
 
     @Override
-    public Integer parse(MessageService messageService, String value) {
+    public Integer parse(MessageService service, String value) {
         int val;
         try {
             val = Integer.parseInt(value);
         } catch (NumberFormatException e) {
-            messageService.sendError("String {0} is not a number", value);
+            service.sendError(service.error("invalid-number"), value);
             return null;
         }
 
         if (minValue != null && val < minValue) {
-            messageService.sendError("Integer {0} is less than min value", val);
+            service.sendError(service.error("less-than-min"), val);
             return null;
         }
         if (maxValue != null && val > maxValue) {
-            messageService.sendError("Integer {0} is greater than max value", val);
+            service.sendError(service.error("greater-than-max"), val);
             return null;
         }
         return val;
