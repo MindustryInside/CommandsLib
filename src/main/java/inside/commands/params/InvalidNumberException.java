@@ -15,9 +15,9 @@ public class InvalidNumberException extends InvalidParameterException {
     @Override
     public void report(MessageService messageService) {
         messageService.sendError(switch (type) {
-            case INVALID -> "String '@' is not a number";
-            case LESS_MIN -> "Integer @ is less than min value";
-            case GREATER_MAX -> "Integer @ is greater than max value";
+            case INVALID -> "String {0} is not a number";
+            case LESS_MIN -> "Integer {0} is less than min value";
+            case GREATER_MAX -> "Integer {0} is greater than max value";
         }, value);
     }
 

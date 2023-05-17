@@ -70,20 +70,6 @@ public abstract sealed class CommandContext permits ClientCommandContext, Server
         return t != null ? t : defaultValueProv.get();
     }
 
-    // bundle provider methods
-    // =======================
-
-    public String get(String key) {
-        return bundleProvider.get(locale, key);
-    }
-
-    public String format(String key, Locale locale, Object... values) {
-        if (values.length == 0) {
-            return bundleProvider.get(locale, key);
-        }
-        return bundleProvider.format(locale, key, values);
-    }
-
     // private methods
     // ===============
 
