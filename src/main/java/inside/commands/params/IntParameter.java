@@ -24,10 +24,13 @@ public class IntParameter extends BaseParameter<Integer> {
         this.minValue = minValue;
     }
 
+    // TODO: docs
+    // exclusive
     public Optional<Integer> minValue() {
         return Optional.ofNullable(minValue);
     }
 
+    // exclusive
     public Optional<Integer> maxValue() {
         return Optional.ofNullable(maxValue);
     }
@@ -39,6 +42,11 @@ public class IntParameter extends BaseParameter<Integer> {
 
     public IntParameter withMaxValue(Integer maxValue) {
         if (Objects.equals(this.maxValue, maxValue)) return this;
+        return new IntParameter(this, minValue, maxValue);
+    }
+
+    public IntParameter withInRange(Integer minValue, Integer maxValue) {
+        if (Objects.equals(this.minValue, minValue) && Objects.equals(this.maxValue, maxValue)) return this;
         return new IntParameter(this, minValue, maxValue);
     }
 
@@ -97,6 +105,12 @@ class IntVariadicParameter extends IntParameter implements VariadicParameter<Int
     @Override
     public IntParameter withMinValue(Integer minValue) {
         if (Objects.equals(this.minValue, minValue)) return this;
+        return new IntVariadicParameter(this, minValue, maxValue);
+    }
+
+    @Override
+    public IntParameter withInRange(Integer minValue, Integer maxValue) {
+        if (Objects.equals(this.minValue, minValue) && Objects.equals(this.maxValue, maxValue)) return this;
         return new IntVariadicParameter(this, minValue, maxValue);
     }
 

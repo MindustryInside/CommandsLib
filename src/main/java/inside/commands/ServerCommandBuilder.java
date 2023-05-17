@@ -3,7 +3,6 @@ package inside.commands;
 import arc.func.Cons;
 import arc.struct.ObjectMap;
 import arc.util.CommandHandler;
-import arc.util.Log;
 import inside.commands.params.InvalidParameterException;
 import inside.commands.params.Parameter;
 import inside.commands.params.VariadicParameter;

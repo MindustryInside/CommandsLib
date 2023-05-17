@@ -26,8 +26,7 @@ class CommandLib {
                 .aliases("t", "cmd")
                 .parameter(StringParameter.from(name))
                 .parameter(IntParameter.from(age)
-                        .withMinValue(13)
-                        .withMaxValue(18))
+                        .withInRange(13, 18))
                 .parameter(IntParameter.from(dates))
                 .handler(serverCtx -> {
                     String mandatory = serverCtx.get(name);
@@ -46,7 +45,7 @@ class CommandLib {
                     serverCtx.messageService().sendMessage("variadic: {0}", variadic);
                 });
 
-        performCommand("/test t1");
+        performCommand("/test t1 12");
         performCommand("/t t2");
     }
 
