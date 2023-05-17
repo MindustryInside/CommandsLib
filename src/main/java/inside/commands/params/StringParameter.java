@@ -1,8 +1,11 @@
 package inside.commands.params;
 
 import arc.struct.Seq;
+import inside.commands.MessageService;
 import inside.commands.params.keys.ParameterKey;
 import inside.commands.params.keys.VariadicKey;
+
+import java.security.InvalidParameterException;
 
 public class StringParameter extends BaseParameter<String> {
 
@@ -17,7 +20,7 @@ public class StringParameter extends BaseParameter<String> {
     }
 
     @Override
-    public String parse(String value) {
+    public String parse(MessageService messageService, String value) {
         return value;
     }
 }
@@ -29,7 +32,7 @@ class StringVariadicParameter extends StringParameter implements VariadicParamet
     }
 
     @Override
-    public Seq<String> parseMultiple(String value) throws InvalidParameterException {
+    public Seq<String> parseMultiple(MessageService messageService, String value) throws InvalidParameterException {
         return Seq.with(value.split(" "));
     }
 }

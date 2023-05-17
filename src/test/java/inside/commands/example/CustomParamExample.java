@@ -6,7 +6,6 @@ import arc.util.Log;
 import inside.commands.CommandManager;
 import inside.commands.MessageService;
 import inside.commands.params.BaseParameter;
-import inside.commands.params.InvalidParameterException;
 import inside.commands.params.keys.MandatoryKey;
 import inside.commands.params.keys.ParameterKey;
 
@@ -67,25 +66,13 @@ class CustomParamExample {
         }
 
         @Override
-        public String parse(String value) {
+        public String parse(MessageService messageService, String value) {
             String role = getRole(value);
             if (role == null) {
-                throw new AdminNotFoundException(value);
+                messageService.sendError("Oh no! No admin with name {0} found!", name);
+                return null;
             }
             return role;
-        }
-    }
-
-    static class AdminNotFoundException extends InvalidParameterException {
-        private final String name;
-
-        AdminNotFoundException(String name) {
-            this.name = name;
-        }
-
-        @Override
-        public void report(MessageService messageService) {
-            messageService.sendError("Oh no! No admin with name {0} found!", name);
         }
     }
 }

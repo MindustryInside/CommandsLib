@@ -3,7 +3,6 @@ package inside.commands;
 import arc.func.Cons;
 import arc.struct.ObjectMap;
 import arc.util.CommandHandler;
-import inside.commands.params.InvalidParameterException;
 import inside.commands.params.Parameter;
 import inside.commands.params.VariadicParameter;
 import mindustry.gen.Player;
@@ -57,21 +56,15 @@ public final class ServerCommandBuilder extends CommandBuilder {
         var parsedParams = new ObjectMap<String, Object>();
         for (int i = 0; i < args.length; i++) {
             var p = parameters.get(i);
-            if (p instanceof VariadicParameter<?> v) {
-                try {
-                    parsedParams.put(p.name(), v.parseMultiple(args[i]));
-                } catch (InvalidParameterException e) {
-                    e.report(messageService);
-                    return;
-                }
-            } else {
-                try {
-                    parsedParams.put(p.name(), p.parse(args[i]));
-                } catch (InvalidParameterException e) {
-                    e.report(messageService);
-                    return;
-                }
+            Object parsed = p instanceof VariadicParameter<?> v
+                    ? v.parseMultiple(messageService, args[i])
+                    : p.parse(messageService, args[i]);
+
+            if (parsed == null) {
+                return;
             }
+
+            parsedParams.put(p.name(), parsed);
         }
 
         handler.get(new ServerCommandContext(manager.consoleLocale,

@@ -1,5 +1,6 @@
 package inside.commands.params;
 
+import inside.commands.MessageService;
 import inside.commands.params.keys.OptionalKey;
 import inside.commands.params.keys.ParameterKey;
 import inside.commands.params.keys.VariadicKey;
@@ -38,7 +39,7 @@ public abstract class BaseParameter<T> implements Parameter<T> {
     }
 
     @Override
-    public abstract T parse(String value);
+    public abstract T parse(MessageService messageService, String value);
 
     @Override
     public String toString() {

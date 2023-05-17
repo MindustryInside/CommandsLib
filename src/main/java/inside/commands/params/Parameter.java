@@ -1,5 +1,7 @@
 package inside.commands.params;
 
+import inside.commands.MessageService;
+
 public interface Parameter<T> {
 
     String name();
@@ -8,5 +10,5 @@ public interface Parameter<T> {
 
     boolean variadic();
 
-    T parse(String value) throws InvalidParameterException;
+    T parse(MessageService messageService, String value);
 }

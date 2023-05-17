@@ -1,6 +1,7 @@
 package inside.commands.params;
 
 import arc.struct.Seq;
+import inside.commands.MessageService;
 import inside.commands.params.keys.ParameterKey;
 import inside.commands.params.keys.VariadicKey;
 
@@ -57,19 +58,22 @@ public class IntParameter extends BaseParameter<Integer> {
     }
 
     @Override
-    public Integer parse(String value) {
+    public Integer parse(MessageService messageService, String value) {
         int val;
         try {
             val = Integer.parseInt(value);
         } catch (NumberFormatException e) {
-            throw new InvalidNumberException(value, InvalidNumberException.Type.INVALID);
+            messageService.sendError("String {0} is not a number", value);
+            return null;
         }
 
         if (minValue != null && val < minValue) {
-            throw new InvalidNumberException(value, InvalidNumberException.Type.LESS_MIN);
+            messageService.sendError("Integer {0} is less than min value", val);
+            return null;
         }
         if (maxValue != null && val > maxValue) {
-            throw new InvalidNumberException(value, InvalidNumberException.Type.GREATER_MAX);
+            messageService.sendError("Integer {0} is greater than max value", val);
+            return null;
         }
         return val;
     }
@@ -115,11 +119,15 @@ class IntVariadicParameter extends IntParameter implements VariadicParameter<Int
     }
 
     @Override
-    public Seq<Integer> parseMultiple(String value) {
+    public Seq<Integer> parseMultiple(MessageService messageService, String value) {
         String[] parts = value.split(" ");
         Seq<Integer> values = new Seq<>(true, parts.length, Integer.class);
         for (String part : parts) {
-            values.add(parse(part));
+            Integer i = parse(messageService, part);
+            if (i == null) {
+                return null;
+            }
+            values.add(i);
         }
         return values;
     }
