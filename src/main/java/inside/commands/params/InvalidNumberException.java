@@ -16,14 +16,14 @@ public class InvalidNumberException extends InvalidParameterException {
     public String localise(Locale locale) {
         return switch (type) {
             case INVALID -> "String '" + value + "' is not a number";
+            case LESS_MIN -> "Integer " + value + " is less than min value";
             case GREATER_MAX -> "Integer " + value + " is greater than max value";
-            case LESS_THAN_MIN -> "Integer " + value + " is less than min value";
         };
     }
 
     public enum Type {
         INVALID,
-        LESS_THAN_MIN,
+        LESS_MIN,
         GREATER_MAX
     }
 }

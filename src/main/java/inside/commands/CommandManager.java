@@ -7,17 +7,19 @@ import java.util.Objects;
 
 public final class CommandManager {
 
-     final CommandHandler handler;
+     final CommandHandler serverHandler;
+     final CommandHandler clientHandler;
 
-     Locale locale = Locale.ROOT;
+     Locale consoleLocale = Locale.ROOT;
      BundleProvider bundleProvider;
 
-     public CommandManager(CommandHandler handler) {
-          this.handler = handler;
+     public CommandManager(CommandHandler serverHandler, CommandHandler clientHandler) {
+          this.serverHandler = Objects.requireNonNull(serverHandler);
+          this.clientHandler = Objects.requireNonNull(clientHandler);
      }
 
      public CommandManager setConsoleLocale(Locale locale) {
-          this.locale = Objects.requireNonNull(locale);
+          this.consoleLocale = Objects.requireNonNull(locale);
           return this;
      }
 
@@ -26,7 +28,11 @@ public final class CommandManager {
           return this;
      }
 
-     public CommandBuilder register(String name) {
-          return new CommandBuilder(this, name);
+     public ClientCommandBuilder registerClient(String name) {
+          return new ClientCommandBuilder(this, name);
+     }
+
+     public ServerCommandBuilder registerServer(String name) {
+          return new ServerCommandBuilder(this, name);
      }
 }

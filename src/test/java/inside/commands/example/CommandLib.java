@@ -9,19 +9,20 @@ import inside.commands.params.StringParameter;
 import inside.commands.params.keys.MandatoryKey;
 import inside.commands.params.keys.OptionalKey;
 import inside.commands.params.keys.OptionalVariadicKey;
+import mindustry.gen.Player;
 
 import java.util.Optional;
 
 class CommandLib {
-    static final CommandHandler handler = new CommandHandler("/");
+    static final CommandHandler commonHandler = new CommandHandler("/");
 
     static final MandatoryKey<String> name = MandatoryKey.of("name");
     static final OptionalKey<Integer> age = OptionalKey.of("age");
     static final OptionalVariadicKey<Integer> dates = OptionalVariadicKey.of("dates");
 
     public static void main(String[] args) {
-        CommandManager manager = new CommandManager(handler);
-        manager.register("test")
+        CommandManager manager = new CommandManager(commonHandler, commonHandler);
+        manager.registerServer("test")
                 .description("description")
                 .aliases("t", "cmd")
                 .parameter(StringParameter.from(name))
@@ -29,15 +30,21 @@ class CommandLib {
                         .withMinValue(13)
                         .withMaxValue(18))
                 .parameter(IntParameter.from(dates))
-                .handler(ctx -> {
-                    String mandatory = ctx.get(name);
+                .handler(serverCtx -> {
+                    String mandatory = serverCtx.get(name);
                     Log.info("mandatory: '@'", mandatory);
 
-                    Optional<Integer> optional = ctx.get(age);
+                    Optional<Integer> optional = serverCtx.get(age);
                     Log.info("optional: @", optional);
 
-                    Optional<Seq<Integer>> variadic = ctx.get(dates);
+                    Optional<Seq<Integer>> variadic = serverCtx.get(dates);
                     Log.info("variadic: @", variadic);
+                });
+
+        manager.registerClient("test")
+                .description("desc")
+                .handler(clientCtx -> {
+                    Player p = clientCtx.player();
                 });
 
         performCommand("/test t1");
@@ -45,7 +52,7 @@ class CommandLib {
     }
 
     static void performCommand(String text) {
-        var res = handler.handleMessage(text);
+        var res = commonHandler.handleMessage(text);
         if (res.type != CommandHandler.ResponseType.valid) {
             Log.info(res.type);
         }

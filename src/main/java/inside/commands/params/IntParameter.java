@@ -58,12 +58,23 @@ public class IntParameter extends BaseParameter<Integer> {
         }
 
         if (minValue != null && val < minValue) {
-            throw new InvalidNumberException(value, InvalidNumberException.Type.LESS_THAN_MIN);
+            throw new InvalidNumberException(value, InvalidNumberException.Type.LESS_MIN);
         }
         if (maxValue != null && val > maxValue) {
             throw new InvalidNumberException(value, InvalidNumberException.Type.GREATER_MAX);
         }
         return val;
+    }
+
+    @Override
+    public String toString() {
+        return "IntParameter{" +
+                "minValue=" + minValue +
+                ", maxValue=" + maxValue +
+                ", name='" + name + '\'' +
+                ", optional=" + optional +
+                ", variadic=" + variadic +
+                '}';
     }
 }
 

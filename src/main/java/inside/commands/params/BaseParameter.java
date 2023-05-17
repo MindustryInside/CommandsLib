@@ -39,4 +39,13 @@ public abstract class BaseParameter<T> implements Parameter<T> {
 
     @Override
     public abstract T parse(String value);
+
+    @Override
+    public String toString() {
+        return "BaseParameter{" +
+                "name='" + name + '\'' +
+                ", optional=" + optional +
+                ", variadic=" + variadic +
+                '}';
+    }
 }

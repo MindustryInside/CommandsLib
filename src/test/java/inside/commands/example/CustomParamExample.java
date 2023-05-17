@@ -8,12 +8,11 @@ import inside.commands.params.BaseParameter;
 import inside.commands.params.InvalidParameterException;
 import inside.commands.params.keys.MandatoryKey;
 import inside.commands.params.keys.ParameterKey;
-import mindustry.gen.Player;
 
 import java.util.Locale;
 
 class CustomParamExample {
-    static final CommandHandler handler = new CommandHandler("/");
+    static final CommandHandler commonHandler = new CommandHandler("/");
 
     static final MandatoryKey<String> name = MandatoryKey.of("name");
 
@@ -36,8 +35,8 @@ class CustomParamExample {
     }
 
     public static void main(String[] args) {
-        CommandManager manager = new CommandManager(handler);
-        manager.register("get")
+        CommandManager manager = new CommandManager(commonHandler, commonHandler);
+        manager.registerClient("get")
                 .description("desc")
                 .parameter(CustomParameter.from(name))
                 .handler(ctx -> {
@@ -50,7 +49,7 @@ class CustomParamExample {
     }
 
     static void performCommand(String text) {
-        var res = handler.handleMessage(text);
+        var res = commonHandler.handleMessage(text);
         if (res.type != CommandHandler.ResponseType.valid) {
             Log.info(res.type);
         }
