@@ -4,6 +4,8 @@ import arc.func.Cons;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.util.CommandHandler;
+import arc.util.Log;
+import inside.commands.params.InvalidParameterException;
 import inside.commands.params.Parameter;
 import inside.commands.params.VariadicParameter;
 import mindustry.gen.Player;
@@ -56,23 +58,23 @@ public final class CommandBuilder {
             for (int i = 0; i < args.length; i++) {
                 var p = parameters.get(i);
                 if (p instanceof VariadicParameter<?> v) {
-                    Object o;
                     try {
-                        o = v.parseMultiple(args[i]);
-                    } catch (Exception e) {
-                        o = e;
-                    }
+                        parsedParams.put(p.name(), v.parseMultiple(args[i]));
+                    } catch (InvalidParameterException e) {
+                        String msg = e.localise(player);
 
-                    parsedParams.put(p.name(), o);
+                        Log.err(msg);
+                        return;
+                    }
                 } else {
-                    Object o;
                     try {
-                        o = p.parse(args[i]);
-                    } catch (Exception e) {
-                        o = e;
-                    }
+                        parsedParams.put(p.name(), p.parse(args[i]));
+                    } catch (InvalidParameterException e) {
+                        String msg = e.localise(player);
 
-                    parsedParams.put(p.name(), o);
+                        Log.err(msg);
+                        return;
+                    }
                 }
             }
 

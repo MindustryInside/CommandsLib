@@ -12,6 +12,12 @@ public abstract class BaseParameter<T> implements Parameter<T> {
     protected final boolean optional;
     protected final boolean variadic;
 
+    protected BaseParameter(BaseParameter<T> copy) {
+        this.name = copy.name;
+        this.optional = copy.optional;
+        this.variadic = copy.variadic;
+    }
+
     protected BaseParameter(ParameterKey<T> key) {
         this.name = key.name();
         this.optional = key instanceof OptionalKey<T>;

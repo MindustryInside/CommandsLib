@@ -4,14 +4,13 @@ import java.util.Objects;
 
 public sealed interface OptionalVariadicKey<T> extends OptionalKey<T>, VariadicKey<T> {
 
-    static <T> OptionalVariadicKey<T> of(String name, Class<T> type) {
-        return new OptionalVariadicKeyImpl<>(name, type);
+    static <T> OptionalVariadicKey<T> of(String name) {
+        return new OptionalVariadicKeyImpl<>(name);
     }
 }
 
-record OptionalVariadicKeyImpl<T>(String name, Class<T> type) implements OptionalVariadicKey<T> {
+record OptionalVariadicKeyImpl<T>(String name) implements OptionalVariadicKey<T> {
     OptionalVariadicKeyImpl {
         Objects.requireNonNull(name);
-        Objects.requireNonNull(type);
     }
 }

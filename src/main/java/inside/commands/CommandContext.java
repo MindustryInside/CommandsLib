@@ -24,38 +24,26 @@ public final class CommandContext {
     }
 
     public <T> Optional<Seq<T>> get(OptionalVariadicKey<T> key) {
-        Object o = parameters.get(key.name());
-        if (o instanceof InvalidParameterException e) {
-            throw e;
-        }
         @SuppressWarnings("unchecked")
-        var t = (Seq<T>) o;
-        return Optional.ofNullable(t);
+        var o = (Seq<T>) parameters.get(key.name());
+        return Optional.ofNullable(o);
     }
 
     public <T> Seq<T> get(MandatoryVariadicKey<T> key) {
-        Object o = parameters.get(key.name());
-        if (o instanceof InvalidParameterException e) {
-            throw e;
-        }
         @SuppressWarnings("unchecked")
-        var t = (Seq<T>) o;
-        return t;
+        var o = (Seq<T>) parameters.get(key.name());
+        return o;
     }
 
     public <T> T get(MandatoryKey<T> key) {
-        Object o = parameters.get(key.name());
-        if (o instanceof InvalidParameterException e) {
-            throw e;
-        }
-        return key.type().cast(o);
+        @SuppressWarnings("unchecked")
+        T o = (T) parameters.get(key.name());
+        return o;
     }
 
     public <T> Optional<T> get(OptionalKey<T> key) {
-        Object o = parameters.get(key.name());
-        if (o instanceof InvalidParameterException e) {
-            throw e;
-        }
-        return Optional.ofNullable(key.type().cast(o));
+        @SuppressWarnings("unchecked")
+        T o = (T) parameters.get(key.name());
+        return Optional.ofNullable(o);
     }
 }

@@ -4,14 +4,42 @@ import arc.struct.Seq;
 import inside.commands.params.keys.ParameterKey;
 import inside.commands.params.keys.VariadicKey;
 
+import java.util.Objects;
+import java.util.Optional;
+
 public class IntParameter extends BaseParameter<Integer> {
+
+    protected final Integer minValue;
+    protected final Integer maxValue;
 
     protected IntParameter(ParameterKey<Integer> key) {
         super(key);
+        this.maxValue = null;
+        this.minValue = null;
     }
 
-    protected IntParameter(String name, boolean optional, boolean variadic) {
-        super(name, optional, variadic);
+    protected IntParameter(IntParameter copy, Integer minValue, Integer maxValue) {
+        super(copy);
+        this.maxValue = maxValue;
+        this.minValue = minValue;
+    }
+
+    public Optional<Integer> minValue() {
+        return Optional.ofNullable(minValue);
+    }
+
+    public Optional<Integer> maxValue() {
+        return Optional.ofNullable(maxValue);
+    }
+
+    public IntParameter withMinValue(Integer minValue) {
+        if (Objects.equals(this.minValue, minValue)) return this;
+        return new IntParameter(this, minValue, maxValue);
+    }
+
+    public IntParameter withMaxValue(Integer maxValue) {
+        if (Objects.equals(this.maxValue, maxValue)) return this;
+        return new IntParameter(this, minValue, maxValue);
     }
 
     public static IntParameter from(ParameterKey<Integer> key) {
@@ -22,11 +50,20 @@ public class IntParameter extends BaseParameter<Integer> {
 
     @Override
     public Integer parse(String value) {
+        int val;
         try {
-            return Integer.parseInt(value);
+            val = Integer.parseInt(value);
         } catch (NumberFormatException e) {
-            throw new InvalidNumberException(value);
+            throw new InvalidNumberException(value, InvalidNumberException.Type.INVALID);
         }
+
+        if (minValue != null && val < minValue) {
+            throw new InvalidNumberException(value, InvalidNumberException.Type.LESS_THAN_MIN);
+        }
+        if (maxValue != null && val > maxValue) {
+            throw new InvalidNumberException(value, InvalidNumberException.Type.GREATER_MAX);
+        }
+        return val;
     }
 }
 
@@ -34,6 +71,22 @@ class IntVariadicParameter extends IntParameter implements VariadicParameter<Int
 
     IntVariadicParameter(VariadicKey<Integer> key) {
         super(key);
+    }
+
+    IntVariadicParameter(IntVariadicParameter copy, Integer minValue, Integer maxValue) {
+        super(copy, minValue, maxValue);
+    }
+
+    @Override
+    public IntParameter withMaxValue(Integer maxValue) {
+        if (Objects.equals(this.maxValue, maxValue)) return this;
+        return new IntVariadicParameter(this, minValue, maxValue);
+    }
+
+    @Override
+    public IntParameter withMinValue(Integer minValue) {
+        if (Objects.equals(this.minValue, minValue)) return this;
+        return new IntVariadicParameter(this, minValue, maxValue);
     }
 
     @Override

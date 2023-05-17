@@ -1,8 +1,9 @@
-package inside.commands;
+package inside.commands.example;
 
 import arc.struct.ObjectMap;
 import arc.util.CommandHandler;
 import arc.util.Log;
+import inside.commands.CommandManager;
 import inside.commands.params.BaseParameter;
 import inside.commands.params.InvalidParameterException;
 import inside.commands.params.keys.MandatoryKey;
@@ -14,7 +15,7 @@ import java.util.Locale;
 class CustomParamExample {
     static final CommandHandler handler = new CommandHandler("/");
 
-    static final MandatoryKey<String> name = MandatoryKey.of("name", String.class);
+    static final MandatoryKey<String> name = MandatoryKey.of("name");
 
     // map which contains admin names and their role
     static final ObjectMap<String, String> admins = new ObjectMap<>();
@@ -23,7 +24,7 @@ class CustomParamExample {
         addAdmin("Skat", "Fish");
         addAdmin("Dark", "Dark");
         addAdmin("Nekonya", "Nya~");
-        addAdmin("Oct", "tcO");
+        addAdmin("Ospx", "xpsO");
     }
 
     static void addAdmin(String name, String role) {
