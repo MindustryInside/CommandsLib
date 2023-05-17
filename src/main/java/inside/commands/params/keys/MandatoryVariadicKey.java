@@ -5,7 +5,7 @@ import java.util.Objects;
 public sealed interface MandatoryVariadicKey<T> extends VariadicKey<T>, MandatoryKey<T> {
 
     static <T> MandatoryVariadicKey<T> of(String name) {
-        return new MandatoryVariadicKeyImpl<>(name);
+        return new MandatoryVariadicKeyImpl<>(Objects.requireNonNull(name));
     }
 
     @Override
@@ -13,8 +13,9 @@ public sealed interface MandatoryVariadicKey<T> extends VariadicKey<T>, Mandator
 }
 
 record MandatoryVariadicKeyImpl<T>(String name) implements MandatoryVariadicKey<T> {
-    MandatoryVariadicKeyImpl {
-        Objects.requireNonNull(name);
+    @Override
+    public MandatoryVariadicKey<T> asVariadic() {
+        return this;
     }
 
     @Override
