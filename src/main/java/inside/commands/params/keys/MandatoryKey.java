@@ -2,19 +2,14 @@ package inside.commands.params.keys;
 
 import java.util.Objects;
 
-public sealed interface MandatoryKey<T> extends ParameterKey<T> permits MandatoryVariadicKey, MandatoryKeyImpl {
+public sealed interface MandatoryKey<T> extends ParameterKey<T>
+        permits MandatorySingleKey, MandatoryVariadicKey {
 
-    static <T> MandatoryKey<T> of(String name) {
-        return new MandatoryKeyImpl<>(Objects.requireNonNull(name));
+    static <T> MandatorySingleKey<T> single(String name) {
+        return new MandatorySingleKeyImpl<>(Objects.requireNonNull(name));
     }
 
-    @Override
-    MandatoryVariadicKey<T> asVariadic();
-}
-
-record MandatoryKeyImpl<T>(String name) implements MandatoryKey<T> {
-    @Override
-    public MandatoryVariadicKey<T> asVariadic() {
-        return new MandatoryVariadicKeyImpl<>(name);
+    static <T> MandatoryVariadicKey<T> variadic(String name) {
+        return new MandatoryVariadicKeyImpl<>(Objects.requireNonNull(name));
     }
 }

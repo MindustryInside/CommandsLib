@@ -8,9 +8,7 @@ import inside.commands.params.IntParameter;
 import inside.commands.params.PlayerParameter;
 import inside.commands.params.PlayerParameter.SearchOption;
 import inside.commands.params.StringParameter;
-import inside.commands.params.keys.MandatoryKey;
-import inside.commands.params.keys.OptionalKey;
-import inside.commands.params.keys.OptionalVariadicKey;
+import inside.commands.params.keys.*;
 import mindustry.gen.Player;
 import mindustry.mod.Plugin;
 
@@ -19,13 +17,14 @@ import java.util.Optional;
 class CommandLib {
     static final CommandHandler commonHandler = new CommandHandler("/");
 
-    static final MandatoryKey<String> name = MandatoryKey.of("name");
-    static final OptionalKey<Integer> age = OptionalKey.of("age");
-    static final OptionalKey<Player> target = OptionalKey.of("target");
-    static final OptionalVariadicKey<Integer> dates = OptionalVariadicKey.of("dates");
+    static final MandatorySingleKey<String> name = MandatoryKey.single("name");
+    static final OptionalSingleKey<Integer> age = OptionalKey.single("age");
+    static final OptionalSingleKey<Player> target = OptionalKey.single("target");
+    static final OptionalVariadicKey<Integer> dates = OptionalKey.variadic("dates");
 
     public static void main(String[] args) {
         CommandManager manager = new CommandManager(commonHandler, commonHandler);
+
         manager.registerServer("test")
                 .description("description")
                 .aliases("t", "cmd")
@@ -51,7 +50,7 @@ class CommandLib {
 
                     Optional<Seq<Integer>> variadic = serverCtx.get(dates);
                     Seq<Integer> defaultValue = serverCtx.get(dates, Seq.with());
-                    Seq<Integer> defaultValueFromProv = serverCtx.getOrDefault(dates, () -> new Seq<>());
+                    Seq<Integer> defaultValueFromProv = serverCtx.getOrDefault(dates, Seq::new);
                     serverCtx.messageService().sendMessage("variadic: {0}", variadic);
                 });
 

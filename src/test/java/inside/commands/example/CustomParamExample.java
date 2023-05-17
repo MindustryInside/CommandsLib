@@ -7,6 +7,7 @@ import inside.commands.CommandManager;
 import inside.commands.MessageService;
 import inside.commands.params.BaseParameter;
 import inside.commands.params.keys.MandatoryKey;
+import inside.commands.params.keys.MandatorySingleKey;
 import inside.commands.params.keys.ParameterKey;
 
 import java.util.Locale;
@@ -14,7 +15,7 @@ import java.util.Locale;
 class CustomParamExample {
     static final CommandHandler commonHandler = new CommandHandler("/");
 
-    static final MandatoryKey<String> name = MandatoryKey.of("name");
+    static final MandatorySingleKey<String> name = MandatoryKey.single("name");
 
     // map which contains admin names and their role
     static final ObjectMap<String, String> admins = new ObjectMap<>();

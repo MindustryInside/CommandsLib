@@ -27,20 +27,20 @@ public abstract sealed class CommandContext permits ClientCommandContext, Server
         return messageService;
     }
 
-    public <T> T get(MandatoryKey<T> key) {
+    public <T> T get(MandatorySingleKey<T> key) {
         return get0(key);
     }
 
-    public <T> Optional<T> get(OptionalKey<T> key) {
+    public <T> Optional<T> get(OptionalSingleKey<T> key) {
         return Optional.ofNullable(get0(key));
     }
 
-    public <T> T get(OptionalKey<T> key, T defaultValue) {
+    public <T> T get(OptionalSingleKey<T> key, T defaultValue) {
         T t = get0(key);
         return t != null ? t : defaultValue;
     }
 
-    public <T> T getOrDefault(OptionalKey<T> key, Prov<T> defaultValueProv) {
+    public <T> T getOrDefault(OptionalSingleKey<T> key, Prov<T> defaultValueProv) {
         T t = get0(key);
         return t != null ? t : defaultValueProv.get();
     }
@@ -54,21 +54,27 @@ public abstract sealed class CommandContext permits ClientCommandContext, Server
     }
 
     public <T> Seq<T> get(OptionalVariadicKey<T> key, Seq<T> defaultValue) {
-        Seq<T> t = get0(key);
+        var t = get0(key);
         return t != null ? t : defaultValue;
     }
 
     public <T> Seq<T> getOrDefault(OptionalVariadicKey<T> key, Prov<Seq<T>> defaultValueProv) {
-        Seq<T> t = get0(key);
+        var t = get0(key);
         return t != null ? t : defaultValueProv.get();
     }
 
     // private methods
     // ===============
 
-    private <T> T get0(ParameterKey<?> key) {
+    private <T> T get0(SingleKey<T> key) {
         @SuppressWarnings("unchecked")
         T o = (T) parameters.get(key.name());
+        return o;
+    }
+
+    private <T> Seq<T> get0(VariadicKey<T> key) {
+        @SuppressWarnings("unchecked")
+        var o = (Seq<T>) parameters.get(key.name());
         return o;
     }
 }
