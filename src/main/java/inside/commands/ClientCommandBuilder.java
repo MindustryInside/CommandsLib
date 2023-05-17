@@ -56,7 +56,7 @@ public final class ClientCommandBuilder extends CommandBuilder {
     }
 
     private void run(Cons<ClientCommandContext> handler, String[] args, Player player) {
-        Locale locale = player != null ? manager.bundleProvider.getLocale(player) : manager.consoleLocale;
+        Locale locale = manager.bundleProvider.getLocale(player);
         var parsedParams = new ObjectMap<String, Object>();
         for (int i = 0; i < args.length; i++) {
             var p = parameters.get(i);

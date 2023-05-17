@@ -1,7 +1,6 @@
 package inside.commands;
 
 import arc.func.Cons;
-import arc.func.Cons2;
 import arc.struct.ObjectMap;
 import arc.util.CommandHandler;
 import arc.util.Log;

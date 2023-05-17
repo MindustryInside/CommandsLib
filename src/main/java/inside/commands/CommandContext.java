@@ -1,13 +1,9 @@
 package inside.commands;
 
+import arc.func.Prov;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
-import arc.util.Nullable;
-import inside.commands.params.keys.MandatoryKey;
-import inside.commands.params.keys.MandatoryVariadicKey;
-import inside.commands.params.keys.OptionalKey;
-import inside.commands.params.keys.OptionalVariadicKey;
-import mindustry.gen.Player;
+import inside.commands.params.keys.*;
 
 import java.util.Locale;
 import java.util.Optional;
@@ -31,28 +27,40 @@ public abstract sealed class CommandContext permits ClientCommandContext, Server
         return bundleProvider;
     }
 
-    public <T> Optional<Seq<T>> get(OptionalVariadicKey<T> key) {
-        @SuppressWarnings("unchecked")
-        var o = (Seq<T>) parameters.get(key.name());
-        return Optional.ofNullable(o);
-    }
-
-    public <T> Seq<T> get(MandatoryVariadicKey<T> key) {
-        @SuppressWarnings("unchecked")
-        var o = (Seq<T>) parameters.get(key.name());
-        return o;
-    }
-
     public <T> T get(MandatoryKey<T> key) {
-        @SuppressWarnings("unchecked")
-        T o = (T) parameters.get(key.name());
-        return o;
+        return get0(key);
     }
 
     public <T> Optional<T> get(OptionalKey<T> key) {
-        @SuppressWarnings("unchecked")
-        T o = (T) parameters.get(key.name());
-        return Optional.ofNullable(o);
+        return Optional.ofNullable(get0(key));
+    }
+
+    public <T> T get(OptionalKey<T> key, T defaultValue) {
+        T t = get0(key);
+        return t != null ? t : defaultValue;
+    }
+
+    public <T> T getOrDefault(OptionalKey<T> key, Prov<T> defaultValueProv) {
+        T t = get0(key);
+        return t != null ? t : defaultValueProv.get();
+    }
+
+    public <T> Seq<T> get(MandatoryVariadicKey<T> key) {
+        return get0(key);
+    }
+
+    public <T> Optional<Seq<T>> get(OptionalVariadicKey<T> key) {
+        return Optional.ofNullable(get0(key));
+    }
+
+    public <T> Seq<T> get(OptionalVariadicKey<T> key, Seq<T> defaultValue) {
+        Seq<T> t = get0(key);
+        return t != null ? t : defaultValue;
+    }
+
+    public <T> Seq<T> getOrDefault(OptionalVariadicKey<T> key, Prov<Seq<T>> defaultValueProv) {
+        Seq<T> t = get0(key);
+        return t != null ? t : defaultValueProv.get();
     }
 
     // bundle provider methods
@@ -67,5 +75,14 @@ public abstract sealed class CommandContext permits ClientCommandContext, Server
             return bundleProvider.get(key, locale);
         }
         return bundleProvider.format(key, locale, values);
+    }
+
+    // private methods
+    // ===============
+
+    private <T> T get0(ParameterKey<?> key) {
+        @SuppressWarnings("unchecked")
+        T o = (T) parameters.get(key.name());
+        return o;
     }
 }
