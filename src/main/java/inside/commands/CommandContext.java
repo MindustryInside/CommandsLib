@@ -12,11 +12,14 @@ public abstract sealed class CommandContext permits ClientCommandContext, Server
     private final Locale locale;
     private final BundleProvider bundleProvider;
     private final ObjectMap<String, ?> parameters;
+    private final MessageService messageService;
 
-    CommandContext(Locale locale, BundleProvider bundleProvider, ObjectMap<String, ?> parameters) {
+    CommandContext(Locale locale, BundleProvider bundleProvider,
+                   ObjectMap<String, ?> parameters, MessageService messageService) {
         this.locale = locale;
         this.bundleProvider = bundleProvider;
         this.parameters = parameters;
+        this.messageService = messageService;
     }
 
     public Locale locale() {
@@ -25,6 +28,10 @@ public abstract sealed class CommandContext permits ClientCommandContext, Server
 
     public BundleProvider bundleProvider() {
         return bundleProvider;
+    }
+
+    public MessageService messageService() {
+        return messageService;
     }
 
     public <T> T get(MandatoryKey<T> key) {
@@ -67,14 +74,14 @@ public abstract sealed class CommandContext permits ClientCommandContext, Server
     // =======================
 
     public String get(String key) {
-        return bundleProvider.get(key, locale);
+        return bundleProvider.get(locale, key);
     }
 
     public String format(String key, Locale locale, Object... values) {
         if (values.length == 0) {
-            return bundleProvider.get(key, locale);
+            return bundleProvider.get(locale, key);
         }
-        return bundleProvider.format(key, locale, values);
+        return bundleProvider.format(locale, key, values);
     }
 
     // private methods

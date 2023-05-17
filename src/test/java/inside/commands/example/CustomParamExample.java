@@ -4,6 +4,7 @@ import arc.struct.ObjectMap;
 import arc.util.CommandHandler;
 import arc.util.Log;
 import inside.commands.CommandManager;
+import inside.commands.MessageService;
 import inside.commands.params.BaseParameter;
 import inside.commands.params.InvalidParameterException;
 import inside.commands.params.keys.MandatoryKey;
@@ -83,8 +84,8 @@ class CustomParamExample {
         }
 
         @Override
-        public String localise(Locale locale) {
-            return "Oh no! No admin with name '" + name + "' found!";
+        public void report(MessageService messageService) {
+            messageService.sendError("Oh no! No admin with name '@' found!", name);
         }
     }
 }

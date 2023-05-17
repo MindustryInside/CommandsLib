@@ -8,7 +8,7 @@ public interface BundleProvider {
 
     Locale getLocale(Player player);
 
-    String get(String key, Locale locale);
+    String get(Locale locale, String key);
 
-    String format(String key, Locale locale, Object... values);
+    String format(Locale locale, String key, Object... values);
 }

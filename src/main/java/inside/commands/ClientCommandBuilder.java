@@ -3,7 +3,6 @@ package inside.commands;
 import arc.func.Cons;
 import arc.struct.ObjectMap;
 import arc.util.CommandHandler;
-import arc.util.Log;
 import inside.commands.params.InvalidParameterException;
 import inside.commands.params.Parameter;
 import inside.commands.params.VariadicParameter;
@@ -13,6 +12,8 @@ import java.util.Locale;
 import java.util.StringJoiner;
 
 public final class ClientCommandBuilder extends CommandBuilder {
+
+    boolean admin;
 
     ClientCommandBuilder(CommandManager manager, String name) {
         super(manager, name);
@@ -38,6 +39,11 @@ public final class ClientCommandBuilder extends CommandBuilder {
         return (ClientCommandBuilder) super.parameter(param);
     }
 
+    public ClientCommandBuilder admin(boolean admin) {
+        this.admin = admin;
+        return this;
+    }
+
     public void handler(Cons<ClientCommandContext> handler) {
         StringJoiner paramSj = new StringJoiner(" ");
         for (var p : parameters) {
@@ -57,6 +63,12 @@ public final class ClientCommandBuilder extends CommandBuilder {
 
     private void run(Cons<ClientCommandContext> handler, String[] args, Player player) {
         Locale locale = manager.bundleProvider.getLocale(player);
+        ClientMessageService messageService = manager.messageServiceFactory.createClient(manager.bundleProvider, player);
+        if (admin && !player.admin) {
+            messageService.sendError(MessageService.ADMIN_ONLY_COMMAND);
+            return;
+        }
+
         var parsedParams = new ObjectMap<String, Object>();
         for (int i = 0; i < args.length; i++) {
             var p = parameters.get(i);
@@ -64,23 +76,20 @@ public final class ClientCommandBuilder extends CommandBuilder {
                 try {
                     parsedParams.put(p.name(), v.parseMultiple(args[i]));
                 } catch (InvalidParameterException e) {
-                    String msg = e.localise(locale);
-
-                    Log.err(msg);
+                    e.report(messageService);
                     return;
                 }
             } else {
                 try {
                     parsedParams.put(p.name(), p.parse(args[i]));
                 } catch (InvalidParameterException e) {
-                    String msg = e.localise(locale);
-
-                    Log.err(msg);
+                    e.report(messageService);
                     return;
                 }
             }
         }
 
-        handler.get(new ClientCommandContext(locale, manager.bundleProvider, parsedParams, player));
+        handler.get(new ClientCommandContext(locale, manager.bundleProvider, parsedParams,
+                player, messageService));
     }
 }

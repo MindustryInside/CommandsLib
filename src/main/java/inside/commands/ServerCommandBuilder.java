@@ -54,6 +54,7 @@ public final class ServerCommandBuilder extends CommandBuilder {
     }
 
     private void run(Cons<ServerCommandContext> handler, String[] args) {
+        MessageService messageService = manager.messageServiceFactory.createServer(manager.bundleProvider, manager.consoleLocale);
         var parsedParams = new ObjectMap<String, Object>();
         for (int i = 0; i < args.length; i++) {
             var p = parameters.get(i);
@@ -61,23 +62,20 @@ public final class ServerCommandBuilder extends CommandBuilder {
                 try {
                     parsedParams.put(p.name(), v.parseMultiple(args[i]));
                 } catch (InvalidParameterException e) {
-                    String msg = e.localise(manager.consoleLocale);
-
-                    Log.err(msg);
+                    e.report(messageService);
                     return;
                 }
             } else {
                 try {
                     parsedParams.put(p.name(), p.parse(args[i]));
                 } catch (InvalidParameterException e) {
-                    String msg = e.localise(manager.consoleLocale);
-
-                    Log.err(msg);
+                    e.report(messageService);
                     return;
                 }
             }
         }
 
-        handler.get(new ServerCommandContext(manager.consoleLocale, manager.bundleProvider, parsedParams));
+        handler.get(new ServerCommandContext(manager.consoleLocale,
+                manager.bundleProvider, parsedParams, messageService));
     }
 }

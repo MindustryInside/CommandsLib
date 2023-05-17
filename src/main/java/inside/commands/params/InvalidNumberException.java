@@ -1,6 +1,6 @@
 package inside.commands.params;
 
-import java.util.Locale;
+import inside.commands.MessageService;
 
 public class InvalidNumberException extends InvalidParameterException {
 
@@ -13,12 +13,12 @@ public class InvalidNumberException extends InvalidParameterException {
     }
 
     @Override
-    public String localise(Locale locale) {
-        return switch (type) {
-            case INVALID -> "String '" + value + "' is not a number";
-            case LESS_MIN -> "Integer " + value + " is less than min value";
-            case GREATER_MAX -> "Integer " + value + " is greater than max value";
-        };
+    public void report(MessageService messageService) {
+        messageService.sendError(switch (type) {
+            case INVALID -> "String '@' is not a number";
+            case LESS_MIN -> "Integer @ is less than min value";
+            case GREATER_MAX -> "Integer @ is greater than max value";
+        }, value);
     }
 
     public enum Type {

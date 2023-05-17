@@ -1,8 +1,12 @@
 package inside.commands.params;
 
-import java.util.Locale;
+import inside.commands.MessageService;
 
 public abstract class InvalidParameterException extends RuntimeException {
 
-    public abstract String localise(Locale locale);
+    public InvalidParameterException() {
+        super(null, null, false, false);
+    }
+
+    public abstract void report(MessageService messageService);
 }
