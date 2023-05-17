@@ -41,12 +41,8 @@ class CustomParamExample {
                 .description("desc")
                 .parameter(CustomParameter.from(name))
                 .handler(ctx -> {
-                    try {
-                        String role = ctx.get(name);
-                        Log.info("Found role: '@'", role);
-                    } catch (AdminNotFoundException e) {
-                        Log.err(e.localise(ctx.player()));
-                    }
+                    String role = ctx.get(name);
+                    Log.info("Found role: '@'", role);
                 });
 
         performCommand("/get skat");
@@ -88,7 +84,7 @@ class CustomParamExample {
         }
 
         @Override
-        public String localise(Player player) {
+        public String localise(Locale locale) {
             return "Oh no! No admin with name '" + name + "' found!";
         }
     }

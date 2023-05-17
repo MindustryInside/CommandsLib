@@ -3,19 +3,28 @@ package inside.commands;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.util.Nullable;
-import inside.commands.params.InvalidParameterException;
-import inside.commands.params.keys.*;
+import inside.commands.params.keys.MandatoryKey;
+import inside.commands.params.keys.MandatoryVariadicKey;
+import inside.commands.params.keys.OptionalKey;
+import inside.commands.params.keys.OptionalVariadicKey;
 import mindustry.gen.Player;
 
+import java.util.Locale;
 import java.util.Optional;
 
 public final class CommandContext {
+    private final Locale locale;
     private final Player player;
     private final ObjectMap<String, ?> parameters;
 
-    CommandContext(Player player, ObjectMap<String, ?> parameters) {
+    CommandContext(Locale locale, Player player, ObjectMap<String, ?> parameters) {
+        this.locale = locale;
         this.player = player;
         this.parameters = parameters;
+    }
+
+    public Locale locale() {
+        return locale;
     }
 
     @Nullable // if it is server command

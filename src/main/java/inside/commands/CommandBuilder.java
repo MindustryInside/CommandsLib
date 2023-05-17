@@ -10,20 +10,21 @@ import inside.commands.params.Parameter;
 import inside.commands.params.VariadicParameter;
 import mindustry.gen.Player;
 
+import java.util.Locale;
 import java.util.Objects;
 import java.util.StringJoiner;
 
 public final class CommandBuilder {
+    private final CommandManager manager;
     private final String name;
-    private final CommandHandler commandHandler;
     private final Seq<Parameter<?>> parameters = new Seq<>();
 
     private boolean hadOptional;
     private String description;
 
-    public CommandBuilder(String name, CommandHandler commandHandler) {
+    CommandBuilder(CommandManager manager, String name) {
+        this.manager = manager;
         this.name = Objects.requireNonNull(name);
-        this.commandHandler = commandHandler;
     }
 
     public CommandBuilder description(String description){
@@ -53,7 +54,8 @@ public final class CommandBuilder {
             paramString.add(parameterAsString(p));
         }
 
-        commandHandler.<Player>register(name, paramString.toString(), description, (args, player) -> {
+        manager.handler.<Player>register(name, paramString.toString(), description, (args, player) -> {
+            Locale locale = player != null ? manager.bundleProvider.getLocale(player) : manager.locale;
             var parsedParams = new ObjectMap<String, Object>();
             for (int i = 0; i < args.length; i++) {
                 var p = parameters.get(i);
@@ -61,7 +63,7 @@ public final class CommandBuilder {
                     try {
                         parsedParams.put(p.name(), v.parseMultiple(args[i]));
                     } catch (InvalidParameterException e) {
-                        String msg = e.localise(player);
+                        String msg = e.localise(locale);
 
                         Log.err(msg);
                         return;
@@ -70,7 +72,7 @@ public final class CommandBuilder {
                     try {
                         parsedParams.put(p.name(), p.parse(args[i]));
                     } catch (InvalidParameterException e) {
-                        String msg = e.localise(player);
+                        String msg = e.localise(locale);
 
                         Log.err(msg);
                         return;
@@ -78,7 +80,7 @@ public final class CommandBuilder {
                 }
             }
 
-            handler.get(new CommandContext(player, parsedParams));
+            handler.get(new CommandContext(locale, player, parsedParams));
         });
     }
 

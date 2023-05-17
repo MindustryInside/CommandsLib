@@ -1,8 +1,8 @@
 package inside.commands.params;
 
-import mindustry.gen.Player;
+import java.util.Locale;
 
 public abstract class InvalidParameterException extends RuntimeException {
 
-    public abstract String localise(Player player);
+    public abstract String localise(Locale locale);
 }

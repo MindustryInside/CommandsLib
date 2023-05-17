@@ -1,6 +1,6 @@
 package inside.commands.params;
 
-import mindustry.gen.Player;
+import java.util.Locale;
 
 public class InvalidNumberException extends InvalidParameterException {
 
@@ -13,7 +13,7 @@ public class InvalidNumberException extends InvalidParameterException {
     }
 
     @Override
-    public String localise(Player player) {
+    public String localise(Locale locale) {
         return switch (type) {
             case INVALID -> "String '" + value + "' is not a number";
             case GREATER_MAX -> "Integer " + value + " is greater than max value";
