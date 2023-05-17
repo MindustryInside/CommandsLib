@@ -9,7 +9,6 @@ import inside.commands.params.StringParameter;
 import inside.commands.params.keys.MandatoryKey;
 import inside.commands.params.keys.OptionalKey;
 import inside.commands.params.keys.OptionalVariadicKey;
-import mindustry.gen.Player;
 
 import java.util.Optional;
 
@@ -39,12 +38,6 @@ class CommandLib {
 
                     Optional<Seq<Integer>> variadic = serverCtx.get(dates);
                     Log.info("variadic: @", variadic);
-                });
-
-        manager.registerClient("test")
-                .description("desc")
-                .handler(clientCtx -> {
-                    Player p = clientCtx.player();
                 });
 
         performCommand("/test t1");
