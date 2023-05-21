@@ -18,7 +18,7 @@ publishing {
 
             //groupId = group
             artifactId = "commands-lib"
-            version = project.version
+            //version = project.version
 
             pom {
                 name.set("CommandsLib")
