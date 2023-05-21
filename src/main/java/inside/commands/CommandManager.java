@@ -55,19 +55,22 @@ public final class CommandManager {
      }
 
      public ClientCommandBuilder registerClient(String name) {
-          validate();
+          validate(false);
           return new ClientCommandBuilder(this, name);
      }
 
      public ServerCommandBuilder registerServer(String name) {
-          validate();
+          validate(true);
           return new ServerCommandBuilder(this, name);
      }
 
-     private void validate() {
-          if (serverHandler == null)
-               throw new IllegalStateException("Server handler not specified");
-          if (clientHandler == null)
-               throw new IllegalStateException("Client handler not specified");
+     private void validate(boolean server) {
+          if (server) {
+               if (serverHandler == null)
+                    throw new IllegalStateException("Server handler not specified");
+          } else {
+               if (clientHandler == null)
+                    throw new IllegalStateException("Client handler not specified");
+          }
      }
 }
