@@ -16,7 +16,7 @@ publishing {
         create<MavenPublication>("release") {
             from(components["java"])
 
-            //groupId = group
+            groupId = "inside.commands"
             artifactId = "commands-lib"
             //version = project.version
 
