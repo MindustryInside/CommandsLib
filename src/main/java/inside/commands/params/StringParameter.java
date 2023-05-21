@@ -1,15 +1,15 @@
 package inside.commands.params;
 
 import inside.commands.MessageService;
-import inside.commands.params.keys.SingleKey;
+import inside.commands.params.keys.ParameterKey;
 
 public class StringParameter extends BaseParameter<String> {
 
-    protected StringParameter(SingleKey<String> key) {
+    protected StringParameter(ParameterKey<String> key) {
         super(key);
     }
 
-    public static StringParameter from(SingleKey<String> key) {
+    public static StringParameter from(ParameterKey<String> key) {
         return new StringParameter(key);
     }
 
