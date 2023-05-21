@@ -4,7 +4,7 @@ import arc.func.Cons;
 import arc.struct.ObjectMap;
 import arc.util.CommandHandler;
 import inside.commands.params.Parameter;
-import inside.commands.params.VariadicParameter;
+import inside.commands.params.ParameterWithDefaultValue;
 import mindustry.gen.Player;
 
 import java.util.StringJoiner;
@@ -54,17 +54,22 @@ public final class ServerCommandBuilder extends CommandBuilder {
     private void run(Cons<ServerCommandContext> handler, String[] args) {
         MessageService messageService = manager.messageServiceFactory.createServer(manager.bundleProvider, manager.consoleLocale);
         var parsedParams = new ObjectMap<String, Object>();
-        for (int i = 0; i < args.length; i++) {
+        int i = 0;
+        for (; i < args.length; i++) {
             var p = parameters.get(i);
-            Object parsed = p instanceof VariadicParameter<?> v
-                    ? v.parseMultiple(messageService, args[i])
-                    : p.parse(messageService, args[i]);
-
+            Object parsed = p.parse(messageService, args[i]);
             if (parsed == null) {
                 return;
             }
 
             parsedParams.put(p.name(), parsed);
+        }
+
+        for (; i < parameters.size; i++) {
+            var p = parameters.get(i);
+            if (p instanceof ParameterWithDefaultValue<?> d) {
+                parsedParams.put(p.name(), d.getDefault());
+            }
         }
 
         handler.get(new ServerCommandContext(manager.consoleLocale, parsedParams, messageService));

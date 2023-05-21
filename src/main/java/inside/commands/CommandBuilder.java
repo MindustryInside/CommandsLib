@@ -35,7 +35,6 @@ public abstract sealed class CommandBuilder permits ServerCommandBuilder, Client
     }
 
     public CommandBuilder parameter(Parameter<?> param) {
-        Objects.requireNonNull(param);
         if (hadOptional && !param.optional()) {
             throw new IllegalArgumentException("Mandatory parameter cant follow after optional one");
         }

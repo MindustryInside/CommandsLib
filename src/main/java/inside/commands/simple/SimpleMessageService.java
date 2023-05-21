@@ -1,4 +1,4 @@
-package inside.commands.impl;
+package inside.commands.simple;
 
 import arc.util.Log;
 import inside.commands.BundleProvider;
@@ -28,7 +28,7 @@ public class SimpleMessageService implements ClientMessageService {
 
     private final BundleProvider bundle;
     private final Locale locale;
-    private final Player player;
+    private final Player player; // null for server commands
 
     SimpleMessageService(BundleProvider bundle, Locale locale, Player player) {
         this.bundle = bundle;
@@ -70,7 +70,7 @@ public class SimpleMessageService implements ClientMessageService {
     }
 
     @Override
-    public void sendAnnounce(Player target, String format, Object... values) {
+    public void announce(Player target, String format, Object... values) {
         Locale locale = bundle.getLocale(target);
         String bundled = bundle.format(locale, format, values);
         Call.announce(target.con, bundled);

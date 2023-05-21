@@ -1,14 +1,12 @@
 package inside.commands.params;
 
-import arc.struct.Seq;
 import arc.util.Strings;
 import inside.commands.MessageService;
 import inside.commands.params.keys.ParameterKey;
-import inside.commands.params.keys.VariadicKey;
+import inside.commands.params.keys.SingleKey;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 
-import java.security.InvalidParameterException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -18,7 +16,7 @@ public class PlayerParameter extends BaseParameter<Player> {
 
     protected final Set<SearchOption> options;
 
-    protected PlayerParameter(ParameterKey<Player> key) {
+    protected PlayerParameter(SingleKey<Player> key) {
         super(key);
         this.options = Set.of();
     }
@@ -28,10 +26,8 @@ public class PlayerParameter extends BaseParameter<Player> {
         this.options = options;
     }
 
-    public static PlayerParameter from(ParameterKey<Player> key) {
-        return key instanceof VariadicKey<Player> v
-                ? new PlayerVariadicParameter(v)
-                : new PlayerParameter(key);
+    public static PlayerParameter from(SingleKey<Player> key) {
+        return new PlayerParameter(key);
     }
 
     public Set<SearchOption> options() {
@@ -74,6 +70,16 @@ public class PlayerParameter extends BaseParameter<Player> {
         return null;
     }
 
+    @Override
+    public String toString() {
+        return "PlayerParameter{" +
+                "options=" + options +
+                ", name='" + name + '\'' +
+                ", optional=" + optional +
+                ", variadic=" + variadic +
+                "} " + super.toString();
+    }
+
     public enum SearchOption {
         IGNORE_CASE,
         STRIP_COLORS_AND_GLYPHS
@@ -89,43 +95,5 @@ public class PlayerParameter extends BaseParameter<Player> {
 
     static String stripAll(String text) {
         return Strings.stripColors(Strings.stripGlyphs(text));
-    }
-}
-
-class PlayerVariadicParameter extends PlayerParameter implements VariadicParameter<Player> {
-
-    protected PlayerVariadicParameter(VariadicKey<Player> key) {
-        super(key);
-    }
-
-    protected PlayerVariadicParameter(PlayerVariadicParameter copy, Set<SearchOption> options) {
-        super(copy, options);
-    }
-
-    public PlayerParameter withOptions(SearchOption... options) {
-        var newOptions = immutableEnumSetOf(Arrays.asList(options), SearchOption.class);
-        if (newOptions.equals(this.options)) return this;
-        return new PlayerVariadicParameter(this, newOptions);
-    }
-
-    public PlayerParameter withOptions(Iterable<SearchOption> options) {
-        var newOptions = immutableEnumSetOf(options, SearchOption.class);
-        if (newOptions.equals(this.options)) return this;
-        return new PlayerVariadicParameter(this, newOptions);
-    }
-
-    @Override
-    public Seq<Player> parseMultiple(MessageService messageService, String value) throws InvalidParameterException {
-        String[] parts = value.split(" ");
-        Seq<Player> players = new Seq<>(parts.length);
-        for (String part : parts) {
-            Player p = parse(messageService, part);
-            if (p == null) {
-                return null;
-            }
-
-            players.add(p);
-        }
-        return players;
     }
 }

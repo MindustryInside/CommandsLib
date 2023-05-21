@@ -1,4 +1,4 @@
-package inside.commands.impl;
+package inside.commands.simple;
 
 import inside.commands.BundleProvider;
 import mindustry.gen.Player;

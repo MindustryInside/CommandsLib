@@ -1,8 +1,8 @@
 package inside.commands;
 
 import arc.util.CommandHandler;
-import inside.commands.impl.SimpleBundleProvider;
-import inside.commands.impl.SimpleMessageService;
+import inside.commands.simple.SimpleBundleProvider;
+import inside.commands.simple.SimpleMessageService;
 
 import java.util.Locale;
 import java.util.Objects;
@@ -54,13 +54,6 @@ public final class CommandManager {
           return this;
      }
 
-     private void validate() {
-          if (serverHandler == null)
-               throw new IllegalStateException("Server handler not specified");
-          if (clientHandler == null)
-               throw new IllegalStateException("Client handler not specified");
-     }
-
      public ClientCommandBuilder registerClient(String name) {
           validate();
           return new ClientCommandBuilder(this, name);
@@ -69,5 +62,12 @@ public final class CommandManager {
      public ServerCommandBuilder registerServer(String name) {
           validate();
           return new ServerCommandBuilder(this, name);
+     }
+
+     private void validate() {
+          if (serverHandler == null)
+               throw new IllegalStateException("Server handler not specified");
+          if (clientHandler == null)
+               throw new IllegalStateException("Client handler not specified");
      }
 }

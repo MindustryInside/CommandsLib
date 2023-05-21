@@ -1,60 +1,78 @@
 package inside.commands.params;
 
-import arc.struct.Seq;
+import arc.func.Prov;
 import inside.commands.MessageService;
-import inside.commands.params.keys.ParameterKey;
-import inside.commands.params.keys.VariadicKey;
+import inside.commands.params.keys.*;
 
 import java.util.Objects;
 import java.util.Optional;
 
-public class IntParameter extends BaseParameter<Integer> {
+public class IntParameter extends BaseParameterWithDefault<Integer> {
 
     protected final Integer minValue;
     protected final Integer maxValue;
 
-    protected IntParameter(ParameterKey<Integer> key) {
-        super(key);
+    protected IntParameter(SingleKey<Integer> key, Prov<Integer> defaultValueProvider) {
+        super(key, defaultValueProvider);
         this.maxValue = null;
         this.minValue = null;
     }
 
-    protected IntParameter(IntParameter copy, Integer minValue, Integer maxValue) {
-        super(copy);
+    protected IntParameter(IntParameter copy, Prov<? extends Integer> defaultValueProvider, Integer minValue, Integer maxValue) {
+        super(copy, defaultValueProvider);
         this.maxValue = maxValue;
         this.minValue = minValue;
     }
 
-    // TODO: docs
-    // exclusive
+    /** {@return the <b>min</b> acceptable integer, if present} (exclusive) */
     public Optional<Integer> minValue() {
         return Optional.ofNullable(minValue);
     }
 
-    // exclusive
+    /** {@return the <b>max</b> acceptable integer, if present} (exclusive) */
     public Optional<Integer> maxValue() {
         return Optional.ofNullable(maxValue);
     }
 
     public IntParameter withMinValue(Integer minValue) {
         if (Objects.equals(this.minValue, minValue)) return this;
-        return new IntParameter(this, minValue, maxValue);
+        return new IntParameter(this, defaultValueProvider, minValue, maxValue);
     }
 
     public IntParameter withMaxValue(Integer maxValue) {
         if (Objects.equals(this.maxValue, maxValue)) return this;
-        return new IntParameter(this, minValue, maxValue);
+        return new IntParameter(this, defaultValueProvider, minValue, maxValue);
     }
 
     public IntParameter withInRange(Integer minValue, Integer maxValue) {
         if (Objects.equals(this.minValue, minValue) && Objects.equals(this.maxValue, maxValue)) return this;
-        return new IntParameter(this, minValue, maxValue);
+        return new IntParameter(this, defaultValueProvider, minValue, maxValue);
     }
 
-    public static IntParameter from(ParameterKey<Integer> key) {
-        return key instanceof VariadicKey<Integer> v
-                ? new IntVariadicParameter(v)
-                : new IntParameter(key);
+    public static IntParameter from(MandatorySingleKey<Integer> key) {
+        return new IntParameter(key, null);
+    }
+
+    public static IntParameter from(OptionalSingleKey<Integer> key) {
+        return new IntParameter(key, null);
+    }
+
+    public static IntParameter from(OptionalSingleKey<Integer> key, Prov<Integer> defaultValueProvider) {
+        return new IntParameter(key, defaultValueProvider);
+    }
+
+    public static IntParameter from(OptionalSingleKey<Integer> key, Integer defaultValueProvider) {
+        return new IntParameter(key, () -> defaultValueProvider);
+    }
+
+    @Override
+    public IntParameter withDefault(Prov<? extends Integer> prov) {
+        return new IntParameter(this, prov, minValue, maxValue);
+    }
+
+    @Override
+    public IntParameter withDefault(Integer value) {
+        return new IntParameter(this, () -> value, minValue, maxValue);
     }
 
     @Override
@@ -87,48 +105,5 @@ public class IntParameter extends BaseParameter<Integer> {
                 ", optional=" + optional +
                 ", variadic=" + variadic +
                 '}';
-    }
-}
-
-class IntVariadicParameter extends IntParameter implements VariadicParameter<Integer> {
-
-    IntVariadicParameter(VariadicKey<Integer> key) {
-        super(key);
-    }
-
-    IntVariadicParameter(IntVariadicParameter copy, Integer minValue, Integer maxValue) {
-        super(copy, minValue, maxValue);
-    }
-
-    @Override
-    public IntParameter withMaxValue(Integer maxValue) {
-        if (Objects.equals(this.maxValue, maxValue)) return this;
-        return new IntVariadicParameter(this, minValue, maxValue);
-    }
-
-    @Override
-    public IntParameter withMinValue(Integer minValue) {
-        if (Objects.equals(this.minValue, minValue)) return this;
-        return new IntVariadicParameter(this, minValue, maxValue);
-    }
-
-    @Override
-    public IntParameter withInRange(Integer minValue, Integer maxValue) {
-        if (Objects.equals(this.minValue, minValue) && Objects.equals(this.maxValue, maxValue)) return this;
-        return new IntVariadicParameter(this, minValue, maxValue);
-    }
-
-    @Override
-    public Seq<Integer> parseMultiple(MessageService messageService, String value) {
-        String[] parts = value.split(" ");
-        Seq<Integer> values = new Seq<>(true, parts.length, Integer.class);
-        for (String part : parts) {
-            Integer i = parse(messageService, part);
-            if (i == null) {
-                return null;
-            }
-            values.add(i);
-        }
-        return values;
     }
 }

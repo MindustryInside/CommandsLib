@@ -43,7 +43,7 @@ public abstract class BaseParameter<T> implements Parameter<T> {
 
     @Override
     public String toString() {
-        return "BaseParameter{" +
+        return getClass().getSimpleName() + '{' +
                 "name='" + name + '\'' +
                 ", optional=" + optional +
                 ", variadic=" + variadic +
