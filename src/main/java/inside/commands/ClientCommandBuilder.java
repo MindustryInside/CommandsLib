@@ -2,13 +2,12 @@ package inside.commands;
 
 import arc.func.Cons;
 import arc.struct.ObjectMap;
-import arc.util.CommandHandler;
+import arc.util.CommandHandler.CommandRunner;
 import inside.commands.params.Parameter;
 import inside.commands.params.ParameterWithDefaultValue;
 import mindustry.gen.Player;
 
 import java.util.Locale;
-import java.util.StringJoiner;
 
 public final class ClientCommandBuilder extends CommandBuilder {
 
@@ -44,18 +43,13 @@ public final class ClientCommandBuilder extends CommandBuilder {
     }
 
     public void handler(Cons<ClientCommandContext> handler) {
-        StringJoiner paramSj = new StringJoiner(" ");
-        for (var p : parameters) {
-            paramSj.add(parameterAsString(p));
-        }
+        String paramText = parameters.toString(" ", CommandBuilder::parameterAsString);
+        CommandRunner<Player> runner = (args, player) -> run(handler, args, player);
 
-        String paramString = paramSj.toString();
-
-        CommandHandler.CommandRunner<Player> runner = (args, player) -> run(handler, args, player);
-        manager.clientHandler.register(name, paramString, description, runner);
+        manager.serverHandler.register(name, paramText, description, runner);
         if (aliases != null) {
             for (String alias : aliases) {
-                manager.clientHandler.register(alias, paramString, description, runner);
+                manager.serverHandler.register(alias, paramText, description, runner);
             }
         }
     }

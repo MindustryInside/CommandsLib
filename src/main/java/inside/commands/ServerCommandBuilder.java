@@ -3,6 +3,7 @@ package inside.commands;
 import arc.func.Cons;
 import arc.struct.ObjectMap;
 import arc.util.CommandHandler;
+import arc.util.CommandHandler.CommandRunner;
 import inside.commands.params.Parameter;
 import inside.commands.params.ParameterWithDefaultValue;
 import mindustry.gen.Player;
@@ -35,18 +36,13 @@ public final class ServerCommandBuilder extends CommandBuilder {
     }
 
     public void handler(Cons<ServerCommandContext> handler) {
-        StringJoiner paramSj = new StringJoiner(" ");
-        for (var p : parameters) {
-            paramSj.add(parameterAsString(p));
-        }
+        String paramText = parameters.toString(" ", CommandBuilder::parameterAsString);
+        CommandRunner<Player> runner = (args, player) -> run(handler, args);
 
-        String paramString = paramSj.toString();
-
-        CommandHandler.CommandRunner<Player> runner = (args, player) -> run(handler, args);
-        manager.serverHandler.register(name, paramString, description, runner);
+        manager.serverHandler.register(name, paramText, description, runner);
         if (aliases != null) {
             for (String alias : aliases) {
-                manager.serverHandler.register(alias, paramString, description, runner);
+                manager.serverHandler.register(alias, paramText, description, runner);
             }
         }
     }
