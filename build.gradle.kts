@@ -14,7 +14,7 @@ repositories {
 publishing {
     publications {
         register("release", MavenPublication::class) {
-            from(components["java"])
+            from(componentslistOf("java"))
             artifactId = "commands"
         }
     }
