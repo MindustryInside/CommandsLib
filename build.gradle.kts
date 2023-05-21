@@ -1,5 +1,6 @@
 plugins {
     `java-library`
+    `maven-publish`
 }
 
 version = "1.0.0"
@@ -8,6 +9,15 @@ repositories {
     mavenLocal()
     mavenCentral()
     maven("https://www.jitpack.io")
+}
+
+publishing {
+    publications {
+        register("release", MavenPublication::class) {
+            from(components["java"])
+            artifactId = "commands"
+        }
+    }
 }
 
 val mindustryVerion = "v144.1"

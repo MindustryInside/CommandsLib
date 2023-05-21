@@ -1,0 +1,13 @@
+name: Publish to JitPack
+
+on: [push]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - id: commit
+        uses: pr-mpt/actions-commit-hash@v2
+      - uses: badasintended/autojitpack@v1
+        with:
+          version: ${{ steps.commit.outputs.short }}
