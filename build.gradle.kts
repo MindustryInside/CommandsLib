@@ -13,9 +13,24 @@ repositories {
 
 publishing {
     publications {
-        register("release", MavenPublication::class) {
-            from(componentslistOf("java"))
-            artifactId = "commands"
+        create<MavenPublication>("release") {
+            from(components["java"])
+
+            //groupId = group
+            artifactId = "commands-lib"
+            version = project.version
+
+            pom {
+                name.set("CommandsLib")
+                description.set("Library for Mindustry plugins and mods for convenient, safe and easy command registering.")
+                url.set("https://github.com/MindustryInside/CommandsLib")
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            url = uri("https://jitpack.io")
         }
     }
 }
