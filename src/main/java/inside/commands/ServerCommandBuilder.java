@@ -2,13 +2,11 @@ package inside.commands;
 
 import arc.func.Cons;
 import arc.struct.ObjectMap;
+import arc.struct.Seq;
 import arc.util.CommandHandler;
-import arc.util.CommandHandler.CommandRunner;
 import inside.commands.params.Parameter;
 import inside.commands.params.ParameterWithDefaultValue;
 import mindustry.gen.Player;
-
-import java.util.StringJoiner;
 
 public final class ServerCommandBuilder extends CommandBuilder {
     ServerCommandBuilder(CommandManager manager, String name) {
@@ -37,11 +35,15 @@ public final class ServerCommandBuilder extends CommandBuilder {
 
     public void handler(Cons<ServerCommandContext> handler) {
         String paramText = parameters.toString(" ", CommandBuilder::parameterAsString);
-        CommandRunner<Player> runner = (args, player) -> run(handler, args);
+        CommandHandler.CommandRunner<Player> runner = (args, player) -> run(handler, args);
 
+        var commandInfo = new ServerCommandInfoImpl(name, description, new Seq<>(aliases),
+                new Seq<>(parameters), handler);
+        manager.commands.put(name, commandInfo);
         manager.serverHandler.register(name, paramText, description, runner);
         if (aliases != null) {
             for (String alias : aliases) {
+                manager.commands.put(name, commandInfo);
                 manager.serverHandler.register(alias, paramText, description, runner);
             }
         }
@@ -68,6 +70,6 @@ public final class ServerCommandBuilder extends CommandBuilder {
             }
         }
 
-        handler.get(new ServerCommandContext(manager.consoleLocale, parsedParams, messageService));
+        handler.get(new ServerCommandContext(parsedParams, messageService));
     }
 }

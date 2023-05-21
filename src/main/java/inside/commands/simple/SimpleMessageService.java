@@ -37,6 +37,11 @@ public class SimpleMessageService implements ClientMessageService {
     }
 
     @Override
+    public Locale locale() {
+        return locale;
+    }
+
+    @Override
     public BundleProvider bundle() {
         return bundle;
     }

@@ -10,6 +10,8 @@ public interface MessageService {
         return bundle().errorsPrefix() + '.' + key;
     }
 
+    Locale locale();
+
     BundleProvider bundle();
 
     void sendError(String format, Object... values);

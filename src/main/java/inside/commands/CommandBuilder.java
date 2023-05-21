@@ -10,7 +10,7 @@ public abstract sealed class CommandBuilder permits ServerCommandBuilder, Client
     final String name;
     final Seq<Parameter<?>> parameters = new Seq<>();
 
-    Seq<String> aliases;
+    Seq<String> aliases = new Seq<>();
     boolean hadOptional;
     String description = "";
 

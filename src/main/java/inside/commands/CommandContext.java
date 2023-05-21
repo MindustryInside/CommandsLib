@@ -6,23 +6,16 @@ import inside.commands.params.keys.MandatoryKey;
 import inside.commands.params.keys.OptionalKey;
 import inside.commands.params.keys.ParameterKey;
 
-import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 
 public abstract sealed class CommandContext permits ClientCommandContext, ServerCommandContext {
-    private final Locale locale;
     private final ObjectMap<String, ?> parameters;
     private final MessageService messageService;
 
-    CommandContext(Locale locale, ObjectMap<String, ?> parameters, MessageService messageService) {
-        this.locale = locale;
+    CommandContext(ObjectMap<String, ?> parameters, MessageService messageService) {
         this.parameters = parameters;
         this.messageService = messageService;
-    }
-
-    public Locale locale() {
-        return locale;
     }
 
     public MessageService messageService() {

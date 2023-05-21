@@ -2,12 +2,11 @@ package inside.commands;
 
 import arc.func.Cons;
 import arc.struct.ObjectMap;
-import arc.util.CommandHandler.CommandRunner;
+import arc.struct.Seq;
+import arc.util.CommandHandler;
 import inside.commands.params.Parameter;
 import inside.commands.params.ParameterWithDefaultValue;
 import mindustry.gen.Player;
-
-import java.util.Locale;
 
 public final class ClientCommandBuilder extends CommandBuilder {
 
@@ -44,12 +43,17 @@ public final class ClientCommandBuilder extends CommandBuilder {
 
     public void handler(Cons<ClientCommandContext> handler) {
         String paramText = parameters.toString(" ", CommandBuilder::parameterAsString);
-        CommandRunner<Player> runner = (args, player) -> run(handler, args, player);
+        CommandHandler.CommandRunner<Player> runner = (args, player) -> run(handler, args, player);
 
-        manager.serverHandler.register(name, paramText, description, runner);
+        var commandInfo = new ClientCommandInfoImpl(name, description, new Seq<>(aliases),
+                new Seq<>(parameters), handler, admin);
+        manager.commands.put(name, commandInfo);
+
+        manager.clientHandler.register(name, paramText, description, runner);
         if (aliases != null) {
             for (String alias : aliases) {
-                manager.serverHandler.register(alias, paramText, description, runner);
+                manager.commands.put(alias, commandInfo);
+                manager.clientHandler.register(alias, paramText, description, runner);
             }
         }
     }
@@ -59,7 +63,6 @@ public final class ClientCommandBuilder extends CommandBuilder {
             throw new IllegalStateException("'player' must be present for client commands");
         }
 
-        Locale locale = manager.bundleProvider.getLocale(player);
         ClientMessageService messageService = manager.messageServiceFactory.createClient(manager.bundleProvider, player);
         if (admin && !player.admin) {
             messageService.sendError(messageService.error("admin-only"));
@@ -85,6 +88,6 @@ public final class ClientCommandBuilder extends CommandBuilder {
             }
         }
 
-        handler.get(new ClientCommandContext(locale, parsedParams, player, messageService));
+        handler.get(new ClientCommandContext(parsedParams, messageService));
     }
 }
