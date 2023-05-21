@@ -17,6 +17,11 @@ public abstract class BaseParameter<T> implements Parameter<T> {
         this.variadic = copy.variadic;
     }
 
+    /**
+     * Creates a new {@code BaseParameter} from specified {@code ParameterKey}.
+     * The {@link #optional()}, {@link #variadic()} attributes will be inferred from
+     * key's type.
+     */
     protected BaseParameter(ParameterKey<T> key) {
         this.name = key.name();
         this.optional = key instanceof OptionalKey<T>;

@@ -8,7 +8,7 @@ import inside.commands.MessageService;
 import inside.commands.params.BaseParameter;
 import inside.commands.params.keys.MandatoryKey;
 import inside.commands.params.keys.MandatorySingleKey;
-import inside.commands.params.keys.ParameterKey;
+import inside.commands.params.keys.SingleKey;
 
 import java.util.Locale;
 
@@ -58,11 +58,11 @@ class CustomParamExample {
 
     static class CustomParameter extends BaseParameter<String> {
 
-        protected CustomParameter(ParameterKey<String> key) {
+        protected CustomParameter(SingleKey<String> key) {
             super(key);
         }
 
-        public static CustomParameter from(ParameterKey<String> key) {
+        static CustomParameter from(SingleKey<String> key) {
             return new CustomParameter(key);
         }
 
