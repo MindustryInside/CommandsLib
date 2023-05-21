@@ -55,7 +55,7 @@ public final class ClientCommandBuilder extends CommandBuilder {
         manager.clientHandler.register(name, paramString, description, runner);
         if (aliases != null) {
             for (String alias : aliases) {
-                manager.serverHandler.register(alias, paramString, description, runner);
+                manager.clientHandler.register(alias, paramString, description, runner);
             }
         }
     }
