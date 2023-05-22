@@ -31,8 +31,8 @@ public final class CommandManager {
      }
 
      public CommandManager(CommandHandler serverHandler, CommandHandler clientHandler) {
-          this.serverHandler = Objects.requireNonNull(serverHandler);
-          this.clientHandler = Objects.requireNonNull(clientHandler);
+          this.setServerHandler(serverHandler);
+          this.setClientHandler(clientHandler);
      }
 
      public void setServerHandler(CommandHandler serverHandler) {
