@@ -4,11 +4,13 @@ import arc.struct.ObjectMap;
 import arc.util.CommandHandler;
 import inside.commands.simple.SimpleBundleProvider;
 import inside.commands.simple.SimpleMessageService;
-import mindustry.Vars;
 import mindustry.ui.Menus;
 
 import java.util.Locale;
 import java.util.Objects;
+
+import static mindustry.Vars.netServer;
+import static mindustry.server.ServerControl.instance;
 
 public final class CommandManager {
 
@@ -24,7 +26,9 @@ public final class CommandManager {
      Locale consoleLocale = Locale.ROOT;
      BundleProvider bundleProvider = SimpleBundleProvider.INSTANCE;
 
-     public CommandManager() {}
+     public CommandManager() {
+          this(instance.handler, netServer.clientCommands);
+     }
 
      public CommandManager(CommandHandler serverHandler, CommandHandler clientHandler) {
           this.serverHandler = Objects.requireNonNull(serverHandler);
@@ -52,8 +56,8 @@ public final class CommandManager {
                ctx.onClick(option);
           });
 
-          var original = Vars.netServer.invalidHandler;
-          Vars.netServer.invalidHandler = (player, response) -> {
+          var original = netServer.invalidHandler;
+          netServer.invalidHandler = (player, response) -> {
                if (response.type == CommandHandler.ResponseType.fewArguments) {
                     var commandInfo = commands.get(response.command.text);
                     if (commandInfo instanceof ClientCommandInfo c) {

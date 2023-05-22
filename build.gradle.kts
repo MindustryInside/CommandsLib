@@ -40,8 +40,11 @@ val mindustryVerion = "v144.1"
 dependencies {
     compileOnly("com.github.Anuken.Arc:arc-core:$mindustryVerion")
     compileOnly("com.github.Anuken.Mindustry:core:$mindustryVerion")
+    compileOnly("com.github.Anuken.Mindustry:server:$mindustryVerion")
+
     testCompileOnly("com.github.Anuken.Arc:arc-core:$mindustryVerion")
     testCompileOnly("com.github.Anuken.Mindustry:core:$mindustryVerion")
+    testCompileOnly("com.github.Anuken.Mindustry:server:$mindustryVerion")
 }
 
 tasks.withType<JavaCompile> {
