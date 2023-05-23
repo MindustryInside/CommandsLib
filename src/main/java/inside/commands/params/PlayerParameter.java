@@ -1,11 +1,8 @@
 package inside.commands.params;
 
-import arc.util.Strings;
 import inside.commands.MessageService;
-import inside.commands.params.keys.ParameterKey;
 import inside.commands.params.keys.SingleKey;
 import inside.commands.util.*;
-import mindustry.gen.Groups;
 import mindustry.gen.Player;
 
 import java.util.*;
@@ -15,8 +12,12 @@ public class PlayerParameter extends BaseParameter<Player> {
     protected final Set<SearchOption> options;
 
     protected PlayerParameter(SingleKey<Player> key) {
+        this(key, EnumSet.allOf(SearchOption.class));
+    }
+
+    protected PlayerParameter(SingleKey<Player> key, Set<SearchOption> options) {
         super(key);
-        this.options = Set.of();
+        this.options = options;
     }
 
     protected PlayerParameter(PlayerParameter copy, Set<SearchOption> options) {
@@ -26,6 +27,10 @@ public class PlayerParameter extends BaseParameter<Player> {
 
     public static PlayerParameter from(SingleKey<Player> key) {
         return new PlayerParameter(key);
+    }
+
+    public static PlayerParameter from(SingleKey<Player> key, Set<SearchOption> options) {
+        return new PlayerParameter(key, options);
     }
 
     public Set<SearchOption> options() {
