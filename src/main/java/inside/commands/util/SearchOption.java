@@ -1,18 +1,22 @@
 package inside.commands.util;
 
-public enum SearchOption {
-    // Common
-    USE_ID,
-    IGNORE_CASE,
-    IGNORE_COLORS,
-    IGNORE_EMOJI,
-    USE_CONTAINS,
+// TODO каждый enum передвинуть внутрь класса соответствующего параметра
+public interface SearchOption {
+    enum DefaultSearchOption implements SearchOption {
+        USE_ID,
+        IGNORE_CASE,
+        IGNORE_COLORS,
+        IGNORE_EMOJI,
+        USE_CONTAINS
+    }
 
-    // Player
-    USE_UUID,
-    USE_IP,
+    enum PlayerSearchOption implements SearchOption {
+        USE_UUID,
+        USE_IP
+    }
 
-    // Map
-    CUSTOM_MAPS,
-    BUILTIN_MAPS,
+    enum MapSearchOption implements SearchOption {
+        CUSTOM_MAPS,
+        BUILTIN_MAPS
+    }
 }
