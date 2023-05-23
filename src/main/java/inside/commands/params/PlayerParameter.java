@@ -4,13 +4,11 @@ import arc.util.Strings;
 import inside.commands.MessageService;
 import inside.commands.params.keys.ParameterKey;
 import inside.commands.params.keys.SingleKey;
+import inside.commands.util.*;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.Set;
+import java.util.*;
 
 public class PlayerParameter extends BaseParameter<Player> {
 
@@ -35,39 +33,31 @@ public class PlayerParameter extends BaseParameter<Player> {
     }
 
     public PlayerParameter withOptions(SearchOption... options) {
-        var newOptions = immutableEnumSetOf(Arrays.asList(options), SearchOption.class);
+        var newOptions = EnumSet.copyOf(Arrays.asList(options));
         if (newOptions.equals(this.options)) return this;
+
         return new PlayerParameter(this, newOptions);
     }
 
-    public PlayerParameter withOptions(Iterable<SearchOption> options) {
-        var newOptions = immutableEnumSetOf(options, SearchOption.class);
+    public PlayerParameter withOptions(Collection<SearchOption> options) {
+        var newOptions = EnumSet.copyOf(options);
         if (newOptions.equals(this.options)) return this;
+
         return new PlayerParameter(this, newOptions);
     }
 
     @Override
     public Player parse(MessageService service, String value) {
-        String transformed = value;
-        if (options.contains(SearchOption.STRIP_COLORS_AND_GLYPHS)) {
-            transformed = stripAll(value);
+        var players = Search.players(value, options);
+        if (players.isEmpty()) {
+            service.sendError(service.error("player-not-found"), value);
+            return null;
+        } else if (players.size > 1) {
+            service.sendError(service.error("too-many-players-found"), value);
+            return null;
         }
 
-        boolean ignoreCase = options.contains(SearchOption.IGNORE_CASE);
-        for (Player player : Groups.player) {
-            if (ignoreCase) {
-                if (transformed.equalsIgnoreCase(player.name)) {
-                    return player;
-                }
-            } else {
-                if (transformed.equals(player.name)) {
-                    return player;
-                }
-            }
-        }
-
-        service.sendError(service.error("player-not-found"), value);
-        return null;
+        return players.first();
     }
 
     @Override
@@ -78,22 +68,5 @@ public class PlayerParameter extends BaseParameter<Player> {
                 ", optional=" + optional +
                 ", variadic=" + variadic +
                 "} " + super.toString();
-    }
-
-    public enum SearchOption {
-        IGNORE_CASE,
-        STRIP_COLORS_AND_GLYPHS
-    }
-
-    static <T extends Enum<T>> Set<T> immutableEnumSetOf(Iterable<T> iterable, Class<T> type) {
-        var s = EnumSet.noneOf(type);
-        for (T e : iterable) {
-            s.add(e);
-        }
-        return Collections.unmodifiableSet(s);
-    }
-
-    static String stripAll(String text) {
-        return Strings.stripColors(Strings.stripGlyphs(text));
     }
 }
