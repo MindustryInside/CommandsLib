@@ -28,8 +28,7 @@ public class MenuContext {
             if (p instanceof ParameterWithMenuSupport<?> m) {
                 parameters[i] = m;
             } else {
-
-                throw new UnsupportedOperationException();
+                throw new IllegalStateException();
             }
         }
     }
@@ -82,6 +81,7 @@ public class MenuContext {
                 values[d++] = row.get(x).value;
             }
         }
+
         Call.menu(messageService.player().con, manager.parameterMenuId, title, message, opts);
     }
 }

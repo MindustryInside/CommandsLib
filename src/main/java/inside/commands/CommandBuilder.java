@@ -38,6 +38,7 @@ public abstract sealed class CommandBuilder permits ServerCommandBuilder, Client
         if (hadOptional && !param.optional()) {
             throw new IllegalArgumentException("Mandatory parameter cant follow after optional one");
         }
+
         hadOptional = param.optional();
 
         if (parameters.contains(p -> p.name().equals(param.name()))) {
@@ -50,17 +51,17 @@ public abstract sealed class CommandBuilder permits ServerCommandBuilder, Client
     }
 
     static String parameterAsString(Parameter<?> param) {
-        String s = param.name();
+        String name = param.name();
         if (param.variadic()) {
-            s = s + "...";
+            name = name + "...";
         }
 
         if (param.optional()) {
-            s = '[' + s + ']';
+            name = '[' + name + ']';
         } else {
-            s = '<' + s + '>';
+            name = '<' + name + '>';
         }
 
-        return s;
+        return name;
     }
 }

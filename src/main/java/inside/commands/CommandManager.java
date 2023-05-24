@@ -14,104 +14,103 @@ import static mindustry.server.ServerControl.instance;
 
 public final class CommandManager {
 
-     int parameterMenuId;
-     final ObjectMap<String, MenuContext> menuContexts = new ObjectMap<>();
+    int parameterMenuId;
+    final ObjectMap<String, MenuContext> menuContexts = new ObjectMap<>();
 
-     final ObjectMap<String, CommandInfo> commands = new ObjectMap<>();
+    final ObjectMap<String, ClientCommandInfo> clientCommands = new ObjectMap<>();
+    final ObjectMap<String, ServerCommandInfo> serverCommands = new ObjectMap<>();
 
-     CommandHandler serverHandler;
-     CommandHandler clientHandler;
+    CommandHandler clientHandler;
+    CommandHandler serverHandler;
 
-     MessageService.Factory messageServiceFactory = SimpleMessageService.factory();
-     Locale consoleLocale = Locale.ROOT;
-     BundleProvider bundleProvider = SimpleBundleProvider.INSTANCE;
+    MessageService.Factory messageServiceFactory = SimpleMessageService.factory();
+    Locale consoleLocale = Locale.ROOT;
+    BundleProvider bundleProvider = SimpleBundleProvider.INSTANCE;
 
-     public CommandManager() {
-          this(instance.handler, netServer.clientCommands);
-     }
+    public CommandManager() {
+        this(netServer.clientCommands, instance.handler);
+    }
 
-     public CommandManager(CommandHandler serverHandler, CommandHandler clientHandler) {
-          this.setServerHandler(serverHandler);
-          this.setClientHandler(clientHandler);
-     }
+    public CommandManager(CommandHandler clientHandler, CommandHandler serverHandler) {
+        this.setClientHandler(clientHandler);
+        this.setServerHandler(serverHandler);
+    }
 
-     public void setServerHandler(CommandHandler serverHandler) {
-          if (this.serverHandler != null) {
-               throw new IllegalStateException("Server handler cant be replaced");
-          }
+    private void initializeMenuSupport() {
+        parameterMenuId = Menus.registerMenu((player, option) -> {
+            if (option == -1) {
+                player.sendMessage("Ну и зачем надо было закрывать меню?");
+                menuContexts.remove(player.uuid());
+                return;
+            }
 
-          this.serverHandler = Objects.requireNonNull(serverHandler);
-     }
+            var ctx = menuContexts.get(player.uuid());
+            ctx.onClick(option);
+        });
 
-     private void initializeMenuSupport() {
+        var original = netServer.invalidHandler;
+        netServer.invalidHandler = (player, response) -> {
+            if (response.type == CommandHandler.ResponseType.fewArguments) {
+                var commandInfo = clientCommands.get(response.command.text);
+                // TODO ???
+                // if (c.admin() && !player.admin) {
+                //      return null;
+                // }
+                var messageService = messageServiceFactory.createClient(bundleProvider, player);
 
-          parameterMenuId = Menus.registerMenu((player, option) -> {
-               if (option == -1) {
-                    player.sendMessage("Ну и зачем надо было закрывать меню?");
-                    menuContexts.remove(player.uuid());
-                    return;
-               }
+                MenuContext ctx = new MenuContext(this, messageService, commandInfo);
+                menuContexts.put(player.uuid(), ctx);
 
-               var ctx = menuContexts.get(player.uuid());
-               ctx.onClick(option);
-          });
+                ctx.createMenu();
+                return null;
 
-          var original = netServer.invalidHandler;
-          netServer.invalidHandler = (player, response) -> {
-               if (response.type == CommandHandler.ResponseType.fewArguments) {
-                    var commandInfo = commands.get(response.command.text);
-                    if (commandInfo instanceof ClientCommandInfo c) {
-                         // TODO ???
-                         // if (c.admin() && !player.admin) {
-                         //      return null;
-                         // }
-                         var messageService = messageServiceFactory.createClient(bundleProvider, player);
+            }
 
-                         MenuContext ctx = new MenuContext(this, messageService, c);
-                         menuContexts.put(player.uuid(), ctx);
+            return original.handle(player, response);
+        };
+    }
 
-                         ctx.createMenu();
-                         return null;
-                    }
-               }
+    public void setClientHandler(CommandHandler clientHandler) {
+        if (this.clientHandler != null) {
+            throw new IllegalStateException("Client handler cannot be replaced");
+        }
 
-               return original.handle(player, response);
-          };
-     }
+        this.clientHandler = Objects.requireNonNull(clientHandler);
+        initializeMenuSupport();
+    }
 
-     public void setClientHandler(CommandHandler clientHandler) {
-          if (this.clientHandler != null) {
-               throw new IllegalStateException("Client handler cant be replaced");
-          }
+    public void setServerHandler(CommandHandler serverHandler) {
+        if (this.serverHandler != null) {
+            throw new IllegalStateException("Server handler cannot be replaced");
+        }
 
-          this.clientHandler = Objects.requireNonNull(clientHandler);
-          initializeMenuSupport();
-     }
+        this.serverHandler = Objects.requireNonNull(serverHandler);
+    }
 
-     public CommandManager setMessageServiceFactory(MessageService.Factory factory) {
-          this.messageServiceFactory = Objects.requireNonNull(factory);
-          return this;
-     }
+    public CommandManager setMessageServiceFactory(MessageService.Factory factory) {
+        this.messageServiceFactory = Objects.requireNonNull(factory);
+        return this;
+    }
 
-     public CommandManager setConsoleLocale(Locale locale) {
-          this.consoleLocale = Objects.requireNonNull(locale);
-          return this;
-     }
+    public CommandManager setConsoleLocale(Locale locale) {
+        this.consoleLocale = Objects.requireNonNull(locale);
+        return this;
+    }
 
-     public CommandManager setBundleProvider(BundleProvider bundleProvider) {
-          this.bundleProvider = Objects.requireNonNull(bundleProvider);
-          return this;
-     }
+    public CommandManager setBundleProvider(BundleProvider bundleProvider) {
+        this.bundleProvider = Objects.requireNonNull(bundleProvider);
+        return this;
+    }
 
-     public ClientCommandBuilder registerClient(String name) {
-          if (clientHandler == null)
-               throw new IllegalStateException("Client handler not specified");
-          return new ClientCommandBuilder(this, name);
-     }
+    public ClientCommandBuilder registerClient(String name) {
+        if (clientHandler == null)
+            throw new IllegalStateException("Client handler not specified");
+        return new ClientCommandBuilder(this, name);
+    }
 
-     public ServerCommandBuilder registerServer(String name) {
-          if (serverHandler == null)
-               throw new IllegalStateException("Server handler not specified");
-          return new ServerCommandBuilder(this, name);
-     }
+    public ServerCommandBuilder registerServer(String name) {
+        if (serverHandler == null)
+            throw new IllegalStateException("Server handler not specified");
+        return new ServerCommandBuilder(this, name);
+    }
 }

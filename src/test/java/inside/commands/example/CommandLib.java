@@ -34,7 +34,7 @@ class CommandLib {
                     String mandatory = ctx.get(name);
                     ctx.messageService().sendMessage("mandatory: {0}", mandatory);
 
-                    int asserted = ctx.getAsserted(age);
+                    int asserted = ctx.getOrThrow(age);
                     Optional<Integer> optional = ctx.get(age);
                     int defaultValue = ctx.get(age, -1);
                     int defaultValueFromProv = ctx.getOrDefault(age, () -> -1);
