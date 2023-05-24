@@ -10,6 +10,10 @@ public sealed interface CommandInfo permits ClientCommandInfo, ServerCommandInfo
 
     String description();
 
+    // returns is this command an alias
+    boolean alias();
+
+    // returns all aliases of this command, null is the command is an alias itself
     Seq<String> aliases();
 
     Seq<Parameter<?>> parameters();

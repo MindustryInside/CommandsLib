@@ -2,6 +2,7 @@ package inside.commands;
 
 import arc.func.Cons;
 import arc.struct.ObjectMap;
+import arc.struct.Seq;
 import arc.util.CommandHandler.CommandRunner;
 import inside.commands.params.Parameter;
 import inside.commands.params.ParameterWithDefaultValue;
@@ -44,7 +45,8 @@ public final class ClientCommandBuilder extends CommandBuilder {
         String paramText = parameters.toString(" ", CommandBuilder::parameterAsString);
         CommandRunner<Player> runner = (args, player) -> run(handler, args, player);
 
-        var commandInfo = new ClientCommandInfoImpl(name, description, aliases.copy(), parameters.copy(), handler, admin);
+        var commandInfo = new ClientCommandInfoImpl(name, description, admin, false, aliases.copy(), parameters.copy(), handler);
+        var aliasInfo = new ClientCommandInfoImpl(name, description, admin, true, null, parameters.copy(), handler);
 
         manager.clientCommands.put(name, commandInfo);
         manager.clientHandler.register(name, paramText, description, runner);

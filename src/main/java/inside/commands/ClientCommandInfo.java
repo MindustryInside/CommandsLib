@@ -12,7 +12,6 @@ public sealed interface ClientCommandInfo extends CommandInfo {
     boolean admin();
 }
 
-record ClientCommandInfoImpl(String name, String description, Seq<String> aliases,
-                             Seq<Parameter<?>> parameters, Cons<ClientCommandContext> handler,
-                             boolean admin) implements ClientCommandInfo {
-}
+record ClientCommandInfoImpl(String name, String description, boolean admin, boolean alias,
+                             Seq<String> aliases, Seq<Parameter<?>> parameters,
+                             Cons<ClientCommandContext> handler) implements ClientCommandInfo {}

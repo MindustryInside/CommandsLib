@@ -10,5 +10,6 @@ public sealed interface ServerCommandInfo extends CommandInfo {
     Cons<ServerCommandContext> handler();
 }
 
-record ServerCommandInfoImpl(String name, String description, Seq<String> aliases,
-                             Seq<Parameter<?>> parameters, Cons<ServerCommandContext> handler) implements ServerCommandInfo {}
+record ServerCommandInfoImpl(String name, String description, boolean alias,
+                             Seq<String> aliases, Seq<Parameter<?>> parameters,
+                             Cons<ServerCommandContext> handler) implements ServerCommandInfo {}

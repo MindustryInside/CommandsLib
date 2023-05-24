@@ -1,6 +1,8 @@
 package inside.commands;
 
 import arc.struct.ObjectMap;
+import arc.struct.ObjectMap.*;
+import arc.struct.Seq;
 import arc.util.CommandHandler;
 import inside.commands.simple.SimpleBundleProvider;
 import inside.commands.simple.SimpleMessageService;
@@ -112,5 +114,25 @@ public final class CommandManager {
         if (serverHandler == null)
             throw new IllegalStateException("Server handler not specified");
         return new ServerCommandBuilder(this, name);
+    }
+
+    public Seq<ClientCommandInfo> getClientCommands(boolean includeAdmin) {
+        return getClientCommands(includeAdmin, false);
+    }
+
+    public Seq<ClientCommandInfo> getClientCommands(boolean includeAdmin, boolean includeAliases) {
+        return new Values<>(clientCommands)
+                .toSeq()
+                .filter(command -> (includeAdmin || !command.admin()) && (includeAliases || !command.alias()));
+    }
+
+    public Seq<ServerCommandInfo> getServerCommands() {
+        return getServerCommands(false);
+    }
+
+    public Seq<ServerCommandInfo> getServerCommands(boolean includeAliases) {
+        return new Values<>(serverCommands)
+                .toSeq()
+                .filter(command -> includeAliases || !command.alias());
     }
 }
