@@ -89,10 +89,12 @@ public class IntParameter extends BaseParameterWithDefault<Integer> {
             service.sendError(service.error("less-than-min"), val);
             return null;
         }
+
         if (maxValue != null && val > maxValue) {
             service.sendError(service.error("greater-than-max"), val);
             return null;
         }
+
         return val;
     }
 

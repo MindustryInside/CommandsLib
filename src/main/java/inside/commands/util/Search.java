@@ -11,7 +11,6 @@ import mindustry.game.Team;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.maps.Map;
-import inside.commands.util.SearchOption.*;
 
 import java.util.*;
 
@@ -23,13 +22,13 @@ public class Search {
         int id = parseId(input);
 
         return Groups.player.copy(new Seq<>()).filter(player -> {
-            if (options.contains(DefaultSearchOption.USE_ID) && player.id == id)
+            if (options.contains(SearchOption.USE_ID) && player.id == id)
                 return true;
 
-            if (options.contains(PlayerSearchOption.USE_UUID) && player.uuid().equals(input))
+            if (options.contains(SearchOption.USE_UUID) && player.uuid().equals(input))
                 return true;
 
-            if (options.contains(PlayerSearchOption.USE_IP) && player.ip().equals(input))
+            if (options.contains(SearchOption.USE_IP) && player.ip().equals(input))
                 return true;
 
             return deepEquals(player.name, input, options);
@@ -40,13 +39,15 @@ public class Search {
         int id = parseId(input) - 1;
 
         return findInSeq(maps.all(), (index, map) -> {
-            if (options.contains(MapSearchOption.CUSTOM_MAPS) && !map.custom)
+            // skip custom maps if needed
+            if (!options.contains(SearchOption.CUSTOM_MAPS) && map.custom)
                 return false;
 
-            if (options.contains(MapSearchOption.BUILTIN_MAPS) && map.custom)
+            // skip built-in maps if needed
+            if (!options.contains(SearchOption.BUILTIN_MAPS) && !map.custom)
                 return false;
 
-            if (options.contains(DefaultSearchOption.USE_ID) && index == id)
+            if (options.contains(SearchOption.USE_ID) && index == id)
                 return true;
 
             return deepEquals(map.name(), input, options);
@@ -57,7 +58,7 @@ public class Search {
         int id = parseId(input) - 1;
 
         return findInSeq(saveDirectory.seq().filter(save -> save.extEquals(mapExtension)), (index, save) -> {
-            if (options.contains(DefaultSearchOption.USE_ID) && index == id)
+            if (options.contains(SearchOption.USE_ID) && index == id)
                 return true;
 
             return deepEquals(save.name(), input, options);
@@ -65,25 +66,31 @@ public class Search {
     }
 
     public static Team team(String input, Set<SearchOption> options) {
-        int id = parseId(input);
+        if (options.contains(SearchOption.USE_ID)) {
+            int id = parseId(input);
+            if (id >= 0 && id < 256)
+                return Team.get(id);
+        }
 
-        return Structs.find(Team.all, team -> {
-            if (options.contains(DefaultSearchOption.USE_ID) && team.id == id)
-                return true;
-
-            return options.contains(DefaultSearchOption.IGNORE_CASE) ? team.name.equalsIgnoreCase(input) : team.name.equals(input);
-        });
+        return Structs.find(Team.all, team ->
+                options.contains(SearchOption.IGNORE_CASE) ?
+                        team.name.equalsIgnoreCase(input) :
+                        team.name.equals(input)
+        );
     }
 
     public static <T extends UnlockableContent> T content(String input, ContentType type, Set<SearchOption> options) {
-        int id = parseId(input);
+        if (options.contains(SearchOption.USE_ID)) {
+            var result = content.<T>getByID(type, parseId(input));
+            if (result != null)
+                return result;
+        }
 
-        return content.<T>getBy(type).find(content -> {
-            if (options.contains(DefaultSearchOption.USE_ID) && content.id == id)
-                return true;
-
-            return options.contains(DefaultSearchOption.IGNORE_CASE) ? content.name.equalsIgnoreCase(input) : content.name.equals(input);
-        });
+        return content.<T>getBy(type).find(content ->
+                options.contains(SearchOption.IGNORE_CASE) ?
+                        content.name.equalsIgnoreCase(input) :
+                        content.name.equals(input)
+        );
     }
 
     // region utils
@@ -117,22 +124,22 @@ public class Search {
     }
 
     public static boolean deepEquals(String name, String input, Set<SearchOption> options) {
-        if (options.contains(DefaultSearchOption.IGNORE_CASE)) {
+        if (options.contains(SearchOption.IGNORE_CASE)) {
             name = name.toLowerCase();
             input = input.toLowerCase();
         }
 
-        if (options.contains(DefaultSearchOption.IGNORE_COLORS)) {
+        if (options.contains(SearchOption.IGNORE_COLORS)) {
             name = Strings.stripColors(name);
             input = Strings.stripColors(input);
         }
 
-        if (options.contains(DefaultSearchOption.IGNORE_EMOJI)) {
+        if (options.contains(SearchOption.IGNORE_EMOJI)) {
             name = Strings.stripGlyphs(name);
             input = Strings.stripGlyphs(input);
         }
 
-        return options.contains(DefaultSearchOption.USE_CONTAINS) ? name.contains(input) : name.equals(input);
+        return options.contains(SearchOption.USE_CONTAINS) ? name.contains(input) : name.equals(input);
     }
 
     // endregion
