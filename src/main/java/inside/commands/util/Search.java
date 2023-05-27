@@ -36,6 +36,7 @@ public class Search {
     }
 
     public static Seq<Map> maps(String input, Set<SearchOption> options) {
+        // subtract one because map IDs are displayed as (1, 2, 3...)
         int id = parseId(input) - 1;
 
         return findInSeq(maps.all(), (index, map) -> {
@@ -55,6 +56,7 @@ public class Search {
     }
 
     public static Seq<Fi> saves(String input, Set<SearchOption> options) {
+        // subtract one because save IDs are displayed as (1, 2, 3...)
         int id = parseId(input) - 1;
 
         return findInSeq(saveDirectory.seq().filter(save -> save.extEquals(mapExtension)), (index, save) -> {
@@ -72,25 +74,17 @@ public class Search {
                 return Team.get(id);
         }
 
-        return Structs.find(Team.all, team ->
-                options.contains(SearchOption.IGNORE_CASE) ?
-                        team.name.equalsIgnoreCase(input) :
-                        team.name.equals(input)
-        );
+        return Structs.find(Team.all, team -> team.name.equals(options.contains(SearchOption.IGNORE_CASE) ? input.toLowerCase() : input));
     }
 
     public static <T extends UnlockableContent> T content(String input, ContentType type, Set<SearchOption> options) {
         if (options.contains(SearchOption.USE_ID)) {
-            var result = content.<T>getByID(type, parseId(input));
+            T result = content.getByID(type, parseId(input));
             if (result != null)
                 return result;
         }
 
-        return content.<T>getBy(type).find(content ->
-                options.contains(SearchOption.IGNORE_CASE) ?
-                        content.name.equalsIgnoreCase(input) :
-                        content.name.equals(input)
-        );
+        return content.getByName(type, options.contains(SearchOption.IGNORE_CASE) ? input.toLowerCase() : input);
     }
 
     // region utils
