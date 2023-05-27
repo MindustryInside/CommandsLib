@@ -45,14 +45,14 @@ public final class ClientCommandBuilder extends CommandBuilder {
         String paramText = parameters.toString(" ", CommandBuilder::parameterAsString);
         CommandRunner<Player> runner = (args, player) -> run(handler, args, player);
 
-        var commandInfo = new ClientCommandInfoImpl(name, description, admin, false, aliases.copy(), parameters.copy(), handler);
-        var aliasInfo = new ClientCommandInfoImpl(name, description, admin, true, null, parameters.copy(), handler);
+        var commandInfo = new ClientCommandInfoImpl(name, paramText, description, admin, false, aliases.copy(), parameters.copy());
+        var aliasInfo = new ClientCommandInfoImpl(name, paramText, description, admin, true, Seq.with(), parameters.copy());
 
         manager.clientCommands.put(name, commandInfo);
         manager.clientHandler.register(name, paramText, description, runner);
 
         for (String alias : aliases) {
-            manager.clientCommands.put(alias, commandInfo);
+            manager.clientCommands.put(alias, aliasInfo);
             manager.clientHandler.register(alias, paramText, description, runner);
         }
     }

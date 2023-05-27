@@ -1,7 +1,6 @@
 package inside.commands;
 
 import arc.struct.ObjectMap;
-import arc.struct.ObjectMap.*;
 import arc.struct.Seq;
 import arc.util.CommandHandler;
 import inside.commands.simple.SimpleBundleProvider;
@@ -121,8 +120,8 @@ public final class CommandManager {
     }
 
     public Seq<ClientCommandInfo> getClientCommands(boolean includeAdmin, boolean includeAliases) {
-        return new Values<>(clientCommands)
-                .toSeq()
+        return clientHandler.getCommandList()
+                .map(command -> clientCommands.get(command.text, new ClientCommandInfoImpl(command.text, command.paramText, command.description, false, false, Seq.with(), Seq.with())))
                 .filter(command -> (includeAdmin || !command.admin()) && (includeAliases || !command.alias()));
     }
 
@@ -131,8 +130,8 @@ public final class CommandManager {
     }
 
     public Seq<ServerCommandInfo> getServerCommands(boolean includeAliases) {
-        return new Values<>(serverCommands)
-                .toSeq()
+        return serverHandler.getCommandList()
+                .map(command -> serverCommands.get(command.text, new ServerCommandInfoImpl(command.text, command.paramText, command.description, false, Seq.with(), Seq.with())))
                 .filter(command -> includeAliases || !command.alias());
     }
 }

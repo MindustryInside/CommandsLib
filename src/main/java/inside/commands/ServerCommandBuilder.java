@@ -34,10 +34,10 @@ public final class ServerCommandBuilder extends CommandBuilder {
 
     public void handler(Cons<ServerCommandContext> handler) {
         String paramText = parameters.toString(" ", CommandBuilder::parameterAsString);
-        CommandRunner<?> runner = (args, player) -> run(handler, args);
+        CommandRunner<?> runner = (args, object) -> run(handler, args);
 
-        var commandInfo = new ServerCommandInfoImpl(name, description, false, aliases.copy(), parameters.copy(), handler);
-        var aliasInfo = new ServerCommandInfoImpl(name, description, true, null, parameters.copy(), handler);
+        var commandInfo = new ServerCommandInfoImpl(name, paramText, description, false, aliases.copy(), parameters.copy());
+        var aliasInfo = new ServerCommandInfoImpl(name, paramText, description, true, Seq.with(), parameters.copy());
 
         manager.serverCommands.put(name, commandInfo);
         manager.serverHandler.register(name, paramText, description, runner);

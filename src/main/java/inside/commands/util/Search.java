@@ -21,7 +21,7 @@ public class Search {
     public static Seq<Player> players(String input, Set<SearchOption> options) {
         int id = parseId(input);
 
-        return Groups.player.copy(new Seq<>()).filter(player -> {
+        return Groups.player.copy(new Seq<>(Groups.player.size())).filter(player -> {
             if (options.contains(SearchOption.USE_ID) && player.id == id)
                 return true;
 
@@ -96,7 +96,7 @@ public class Search {
     // region utils
 
     public static <T> Seq<T> findInSeq(Seq<T> values, Boolf2<Integer, T> filter) {
-        var result = new Seq<T>();
+        var result = new Seq<T>(values.size);
 
         for (int i = 0; i < values.size; i++) {
             if (filter.get(i, values.get(i)))
@@ -107,7 +107,7 @@ public class Search {
     }
 
     public static <T extends Enum<T>> Seq<T> findInEnum(T[] values, Boolf2<Integer, T> filter) {
-        var result = new Seq<T>();
+        var result = new Seq<T>(values.length);
 
         for (int i = 0; i < values.length; i++) {
             if (filter.get(i, values[i]))
