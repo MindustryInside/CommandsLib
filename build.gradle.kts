@@ -29,9 +29,7 @@ publishing {
     }
 
     repositories {
-        maven {
-            url = uri("https://jitpack.io")
-        }
+        maven("https://jitpack.io")
     }
 }
 
@@ -49,4 +47,11 @@ dependencies {
 
 tasks.withType<JavaCompile> {
     options.release.set(17)
+}
+
+tasks.withType<Jar> {
+    manifest {
+        attributes("Automatic-Module-Name" to "inside.commandslib")
+        attributes("Implementation-Version" to version)
+    }
 }
