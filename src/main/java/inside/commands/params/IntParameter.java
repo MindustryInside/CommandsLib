@@ -7,7 +7,7 @@ import inside.commands.params.keys.*;
 import java.util.Objects;
 import java.util.Optional;
 
-public class IntParameter extends BaseParameterWithDefault<Integer> {
+public class IntParameter extends BaseDefaultValueParameter<Integer> {
 
     protected final Integer minValue;
     protected final Integer maxValue;
@@ -44,7 +44,7 @@ public class IntParameter extends BaseParameterWithDefault<Integer> {
         return new IntParameter(this, defaultValueProvider, minValue, maxValue);
     }
 
-    public IntParameter withInRange(Integer minValue, Integer maxValue) {
+    public IntParameter withRange(Integer minValue, Integer maxValue) {
         if (Objects.equals(this.minValue, minValue) && Objects.equals(this.maxValue, maxValue)) return this;
         return new IntParameter(this, defaultValueProvider, minValue, maxValue);
     }

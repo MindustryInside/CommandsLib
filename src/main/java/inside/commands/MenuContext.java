@@ -2,7 +2,7 @@ package inside.commands;
 
 import arc.struct.ObjectMap;
 import inside.commands.menu.MenuSpec;
-import inside.commands.params.ParameterWithMenuSupport;
+import inside.commands.params.MenuParameter;
 import mindustry.gen.Call;
 
 public class MenuContext {
@@ -10,7 +10,7 @@ public class MenuContext {
     private final CommandManager manager;
     private final ClientMessageService messageService;
     private final ClientCommandDescriptor commandDescriptor;
-    private final ParameterWithMenuSupport<?>[] parameters;
+    private final MenuParameter<?>[] parameters;
     private final ObjectMap<String, Object> processedParameters = new ObjectMap<>();
 
     private Object[] values;
@@ -22,10 +22,10 @@ public class MenuContext {
         this.commandDescriptor = commandDescriptor;
 
         var params = commandDescriptor.info().parameters();
-        this.parameters = new ParameterWithMenuSupport<?>[params.size];
+        this.parameters = new MenuParameter<?>[params.size];
         for (int i = 0; i < params.size; i++) {
             var p = params.get(i);
-            if (p instanceof ParameterWithMenuSupport<?> m) {
+            if (p instanceof MenuParameter<?> m) {
                 parameters[i] = m;
             } else {
                 throw new IllegalStateException();

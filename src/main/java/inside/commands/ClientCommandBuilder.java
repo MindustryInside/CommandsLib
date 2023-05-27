@@ -5,7 +5,7 @@ import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.util.CommandHandler.CommandRunner;
 import inside.commands.params.Parameter;
-import inside.commands.params.ParameterWithDefaultValue;
+import inside.commands.params.DefaultValueParameter;
 import mindustry.gen.Player;
 
 public final class ClientCommandBuilder extends CommandBuilder {
@@ -84,7 +84,7 @@ public final class ClientCommandBuilder extends CommandBuilder {
 
         for (; i < parameters.size; i++) {
             var p = parameters.get(i);
-            if (p instanceof ParameterWithDefaultValue<?> d) {
+            if (p instanceof DefaultValueParameter<?> d) {
                 parsedParams.put(p.name(), d.getDefault());
             }
         }

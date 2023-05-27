@@ -5,7 +5,7 @@ import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.util.CommandHandler.CommandRunner;
 import inside.commands.params.Parameter;
-import inside.commands.params.ParameterWithDefaultValue;
+import inside.commands.params.DefaultValueParameter;
 
 public final class ServerCommandBuilder extends CommandBuilder {
     ServerCommandBuilder(CommandManager manager, String name) {
@@ -66,7 +66,7 @@ public final class ServerCommandBuilder extends CommandBuilder {
 
         for (; i < parameters.size; i++) {
             var p = parameters.get(i);
-            if (p instanceof ParameterWithDefaultValue<?> d) {
+            if (p instanceof DefaultValueParameter<?> d) {
                 parsedParams.put(p.name(), d.getDefault());
             }
         }

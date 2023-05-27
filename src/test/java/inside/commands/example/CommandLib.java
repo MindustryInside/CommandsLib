@@ -26,7 +26,7 @@ class CommandLib {
                 .aliases("t", "cmd")
                 .parameter(StringParameter.from(name))
                 .parameter(IntParameter.from(age, -1)
-                        .withInRange(13, 18))
+                        .withRange(13, 18))
                 .parameter(StringParameter.from(words))
                 // .parameter(PlayerParameter.from(target)
                 //         .withOptions(SearchOption.IGNORE_CASE, SearchOption.STRIP_COLORS_AND_GLYPHS))

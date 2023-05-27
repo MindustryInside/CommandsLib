@@ -3,15 +3,15 @@ package inside.commands.params;
 import arc.func.Prov;
 import inside.commands.params.keys.ParameterKey;
 
-public abstract class BaseParameterWithDefault<T> extends BaseParameter<T> implements ParameterWithDefaultValue<T> {
+public abstract class BaseDefaultValueParameter<T> extends BaseParameter<T> implements DefaultValueParameter<T> {
     protected final Prov<? extends T> defaultValueProvider;
 
-    protected BaseParameterWithDefault(BaseParameterWithDefault<T> copy, Prov<? extends T> defaultValueProvider) {
+    protected BaseDefaultValueParameter(BaseDefaultValueParameter<T> copy, Prov<? extends T> defaultValueProvider) {
         super(copy);
         this.defaultValueProvider = defaultValueProvider;
     }
 
-    protected BaseParameterWithDefault(ParameterKey<T> key, Prov<? extends T> defaultValueProvider) {
+    protected BaseDefaultValueParameter(ParameterKey<T> key, Prov<? extends T> defaultValueProvider) {
         super(key);
         this.defaultValueProvider = defaultValueProvider;
     }
@@ -22,8 +22,8 @@ public abstract class BaseParameterWithDefault<T> extends BaseParameter<T> imple
     }
 
     @Override
-    public abstract BaseParameterWithDefault<T> withDefault(Prov<? extends T> prov);
+    public abstract BaseDefaultValueParameter<T> withDefault(Prov<? extends T> prov);
 
     @Override
-    public abstract BaseParameterWithDefault<T> withDefault(T value);
+    public abstract BaseDefaultValueParameter<T> withDefault(T value);
 }
