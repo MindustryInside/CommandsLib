@@ -9,19 +9,19 @@ public class MenuContext {
 
     private final CommandManager manager;
     private final ClientMessageService messageService;
-    private final ClientCommandInfo commandInfo;
+    private final ClientCommandDescriptor commandDescriptor;
     private final ParameterWithMenuSupport<?>[] parameters;
     private final ObjectMap<String, Object> processedParameters = new ObjectMap<>();
 
     private Object[] values;
     private int stage = 0;
 
-    public MenuContext(CommandManager manager, ClientMessageService messageService, ClientCommandInfo commandInfo) {
+    public MenuContext(CommandManager manager, ClientMessageService messageService, ClientCommandDescriptor commandDescriptor) {
         this.manager = manager;
         this.messageService = messageService;
-        this.commandInfo = commandInfo;
+        this.commandDescriptor = commandDescriptor;
 
-        var params = commandInfo.parameters();
+        var params = commandDescriptor.info().parameters();
         this.parameters = new ParameterWithMenuSupport<?>[params.size];
         for (int i = 0; i < params.size; i++) {
             var p = params.get(i);
@@ -39,7 +39,7 @@ public class MenuContext {
 
         if (++stage == parameters.length) {
             manager.menuContexts.remove(messageService.player().uuid());
-            commandInfo.handler().get(new ClientCommandContext(processedParameters, messageService));
+            commandDescriptor.handler().get(new ClientCommandContext(processedParameters, messageService));
             return;
         }
 

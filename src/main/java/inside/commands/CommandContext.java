@@ -26,7 +26,6 @@ public abstract sealed class CommandContext permits ClientCommandContext, Server
         return get0(key);
     }
 
-    // TODO: concise name
     public <T> T getOrThrow(OptionalKey<T> key) {
         return Objects.requireNonNull(get0(key), () -> "No value for key: " + key);
     }

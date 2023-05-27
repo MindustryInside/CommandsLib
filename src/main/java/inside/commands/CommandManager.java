@@ -18,8 +18,8 @@ public final class CommandManager {
     int parameterMenuId;
     final ObjectMap<String, MenuContext> menuContexts = new ObjectMap<>();
 
-    final ObjectMap<String, ClientCommandInfo> clientCommands = new ObjectMap<>();
-    final ObjectMap<String, ServerCommandInfo> serverCommands = new ObjectMap<>();
+    final ObjectMap<String, ClientCommandDescriptor> clientCommands = new ObjectMap<>();
+    final ObjectMap<String, ServerCommandDescriptor> serverCommands = new ObjectMap<>();
 
     CommandHandler clientHandler;
     CommandHandler serverHandler;
@@ -121,7 +121,14 @@ public final class CommandManager {
 
     public Seq<ClientCommandInfo> getClientCommands(boolean includeAdmin, boolean includeAliases) {
         return clientHandler.getCommandList()
-                .map(command -> clientCommands.get(command.text, new ClientCommandInfoImpl(command.text, command.paramText, command.description, false, false, Seq.with(), Seq.with())))
+                .map(command -> {
+                    var desc = clientCommands.get(command.text);
+                    if (desc != null) {
+                        return desc.info();
+                    }
+                    return new ClientCommandInfoImpl(command.text, command.paramText,
+                            command.description, false, false, Seq.with(), Seq.with());
+                })
                 .filter(command -> (includeAdmin || !command.admin()) && (includeAliases || !command.alias()));
     }
 
@@ -131,7 +138,14 @@ public final class CommandManager {
 
     public Seq<ServerCommandInfo> getServerCommands(boolean includeAliases) {
         return serverHandler.getCommandList()
-                .map(command -> serverCommands.get(command.text, new ServerCommandInfoImpl(command.text, command.paramText, command.description, false, Seq.with(), Seq.with())))
+                .map(command -> {
+                    var desc = serverCommands.get(command.text);
+                    if (desc != null) {
+                        return desc.info();
+                    }
+                    return new ServerCommandInfoImpl(command.text, command.paramText,
+                            command.description, false, Seq.with(), Seq.with());
+                })
                 .filter(command -> includeAliases || !command.alias());
     }
 }

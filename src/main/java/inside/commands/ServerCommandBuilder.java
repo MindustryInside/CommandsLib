@@ -37,13 +37,15 @@ public final class ServerCommandBuilder extends CommandBuilder {
         CommandRunner<?> runner = (args, object) -> run(handler, args);
 
         var commandInfo = new ServerCommandInfoImpl(name, paramText, description, false, aliases.copy(), parameters.copy());
+        var mainDesc = new ServerCommandDescriptor(commandInfo, handler);
         var aliasInfo = new ServerCommandInfoImpl(name, paramText, description, true, Seq.with(), parameters.copy());
+        var aliasDesc = new ServerCommandDescriptor(aliasInfo, handler);
 
-        manager.serverCommands.put(name, commandInfo);
+        manager.serverCommands.put(name, mainDesc);
         manager.serverHandler.register(name, paramText, description, runner);
 
         for (String alias : aliases) {
-            manager.serverCommands.put(alias, aliasInfo);
+            manager.serverCommands.put(alias, aliasDesc);
             manager.serverHandler.register(alias, paramText, description, runner);
         }
     }

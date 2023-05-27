@@ -46,13 +46,15 @@ public final class ClientCommandBuilder extends CommandBuilder {
         CommandRunner<Player> runner = (args, player) -> run(handler, args, player);
 
         var commandInfo = new ClientCommandInfoImpl(name, paramText, description, admin, false, aliases.copy(), parameters.copy());
+        var mainDesc = new ClientCommandDescriptor(commandInfo, handler);
         var aliasInfo = new ClientCommandInfoImpl(name, paramText, description, admin, true, Seq.with(), parameters.copy());
+        var aliasDesc = new ClientCommandDescriptor(aliasInfo, handler);
 
-        manager.clientCommands.put(name, commandInfo);
+        manager.clientCommands.put(name, mainDesc);
         manager.clientHandler.register(name, paramText, description, runner);
 
         for (String alias : aliases) {
-            manager.clientCommands.put(alias, aliasInfo);
+            manager.clientCommands.put(alias, aliasDesc);
             manager.clientHandler.register(alias, paramText, description, runner);
         }
     }
