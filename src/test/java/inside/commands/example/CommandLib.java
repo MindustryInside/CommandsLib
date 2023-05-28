@@ -3,9 +3,11 @@ package inside.commands.example;
 import arc.util.CommandHandler;
 import arc.util.Log;
 import inside.commands.CommandManager;
-import inside.commands.params.IntParameter;
-import inside.commands.params.StringParameter;
+import inside.commands.params.impl.IntParameter;
+import inside.commands.params.impl.PlayerParameter;
+import inside.commands.params.impl.StringParameter;
 import inside.commands.params.keys.*;
+import inside.commands.util.SearchOption;
 import mindustry.gen.Player;
 
 import java.util.Optional;
@@ -28,8 +30,8 @@ class CommandLib {
                 .parameter(IntParameter.from(age, -1)
                         .withRange(13, 18))
                 .parameter(StringParameter.from(words))
-                // .parameter(PlayerParameter.from(target)
-                //         .withOptions(SearchOption.IGNORE_CASE, SearchOption.STRIP_COLORS_AND_GLYPHS))
+                .parameter(PlayerParameter.from(target)
+                         .withOptions(SearchOption.IGNORE_CASE, SearchOption.IGNORE_COLORS))
                 .handler(ctx -> {
                     String mandatory = ctx.get(name);
                     ctx.messageService().sendMessage("mandatory: {0}", mandatory);

@@ -1,7 +1,8 @@
-package inside.commands.params;
+package inside.commands.params.impl;
 
 import arc.func.Prov;
 import inside.commands.MessageService;
+import inside.commands.params.BaseDefaultValueParameter;
 import inside.commands.params.keys.*;
 
 import java.util.Objects;
@@ -12,7 +13,7 @@ public class IntParameter extends BaseDefaultValueParameter<Integer> {
     protected final Integer minValue;
     protected final Integer maxValue;
 
-    protected IntParameter(SingleKey<Integer> key, Prov<Integer> defaultValueProvider) {
+    protected IntParameter(SingleKey<Integer> key, Prov<? extends Integer> defaultValueProvider) {
         super(key, defaultValueProvider);
         this.maxValue = null;
         this.minValue = null;
@@ -61,18 +62,18 @@ public class IntParameter extends BaseDefaultValueParameter<Integer> {
         return new IntParameter(key, defaultValueProvider);
     }
 
-    public static IntParameter from(OptionalSingleKey<Integer> key, Integer defaultValueProvider) {
-        return new IntParameter(key, () -> defaultValueProvider);
+    public static IntParameter from(OptionalSingleKey<Integer> key, Integer defaultValue) {
+        return new IntParameter(key, () -> defaultValue);
     }
 
     @Override
-    public IntParameter withDefault(Prov<? extends Integer> prov) {
-        return new IntParameter(this, prov, minValue, maxValue);
+    public IntParameter withDefault(Prov<? extends Integer> defaultValueProvider) {
+        return new IntParameter(this, defaultValueProvider, minValue, maxValue);
     }
 
     @Override
-    public IntParameter withDefault(Integer value) {
-        return new IntParameter(this, () -> value, minValue, maxValue);
+    public IntParameter withDefault(Integer defaultValue) {
+        return new IntParameter(this, () -> defaultValue, minValue, maxValue);
     }
 
     @Override

@@ -1,7 +1,8 @@
-package inside.commands.params;
+package inside.commands.params.impl;
 
 import arc.files.Fi;
 import inside.commands.MessageService;
+import inside.commands.params.BaseParameter;
 import inside.commands.params.keys.SingleKey;
 import inside.commands.util.*;
 

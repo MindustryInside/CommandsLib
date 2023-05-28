@@ -26,7 +26,7 @@ public enum SimpleBundleProvider implements BundleProvider {
 
     @Override
     public String format(Locale locale, String key, Object... values) {
-        MessageFormat fmt = new MessageFormat(key, locale);
-        return fmt.format(values);
+        MessageFormat format = new MessageFormat(key, locale);
+        return format.format(values);
     }
 }
