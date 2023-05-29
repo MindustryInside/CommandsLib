@@ -42,8 +42,8 @@ class CommandLib {
                     int defaultValueFromProv = ctx.getOrDefault(age, () -> -1);
                     ctx.messageService().sendMessage("optional: {0}", optional);
 
-                    // Player targetValue = ctx.get(target, null);
-                    // ctx.messageService().sendMessage("target: {0}", targetValue);
+                    Player targetValue = ctx.get(target, null);
+                    ctx.messageService().sendMessage("target: {0}", targetValue);
 
                     String wordsv = ctx.get(words, ":(");
                     ctx.messageService().sendMessage("words: {0}", wordsv);

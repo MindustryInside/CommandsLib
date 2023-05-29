@@ -16,7 +16,7 @@ public interface Parameter<T> {
      * @param service The service to communicate with command sender.
      * @param value The string value of argument. May have spaces if parameter
      * is declared as {@link #variadic()}.
-     * @return The result value of parameter, or {@code null} if cannot read.
+     * @return The result value of parameter, or {@code null} if it cannot be parsed.
      */
     T parse(MessageService service, String value);
 }
