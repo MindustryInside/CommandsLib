@@ -51,11 +51,7 @@ public class IntParameter extends BaseDefaultValueParameter<Integer> {
         return new IntParameter(this, defaultValueProvider, minValue, maxValue);
     }
 
-    public static IntParameter from(MandatorySingleKey<Integer> key) {
-        return new IntParameter(key, null);
-    }
-
-    public static IntParameter from(OptionalSingleKey<Integer> key) {
+    public static IntParameter from(SingleKey<Integer> key) {
         return new IntParameter(key, null);
     }
 
