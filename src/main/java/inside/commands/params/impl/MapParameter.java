@@ -73,6 +73,6 @@ public class MapParameter extends BaseParameter<Map> {
                 ", name='" + name + '\'' +
                 ", optional=" + optional +
                 ", variadic=" + variadic +
-                "} " + super.toString();
+                '}';
     }
 }

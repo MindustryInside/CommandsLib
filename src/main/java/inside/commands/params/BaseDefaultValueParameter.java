@@ -26,4 +26,14 @@ public abstract class BaseDefaultValueParameter<T> extends BaseParameter<T> impl
 
     @Override
     public abstract BaseDefaultValueParameter<T> withDefault(T value);
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + '{' +
+                "name='" + name + '\'' +
+                ", optional=" + optional +
+                ", variadic=" + variadic +
+                ", defaultValueProvider=" + defaultValueProvider +
+                '}';
+    }
 }

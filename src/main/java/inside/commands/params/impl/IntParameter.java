@@ -4,6 +4,7 @@ import arc.func.Prov;
 import inside.commands.MessageService;
 import inside.commands.params.BaseDefaultValueParameter;
 import inside.commands.params.keys.*;
+import inside.commands.util.DerivedProv;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -63,7 +64,7 @@ public class IntParameter extends BaseDefaultValueParameter<Integer> {
     }
 
     public static IntParameter from(OptionalSingleKey<Integer> key, Integer defaultValue) {
-        return new IntParameter(key, () -> defaultValue);
+        return new IntParameter(key, DerivedProv.of(defaultValue));
     }
 
     @Override
@@ -73,7 +74,7 @@ public class IntParameter extends BaseDefaultValueParameter<Integer> {
 
     @Override
     public IntParameter withDefault(Integer defaultValue) {
-        return new IntParameter(this, () -> defaultValue, minValue, maxValue);
+        return new IntParameter(this, DerivedProv.of(defaultValue), minValue, maxValue);
     }
 
     @Override
@@ -104,6 +105,7 @@ public class IntParameter extends BaseDefaultValueParameter<Integer> {
         return "IntParameter{" +
                 "minValue=" + minValue +
                 ", maxValue=" + maxValue +
+                ", defaultValueProvider=" + defaultValueProvider +
                 ", name='" + name + '\'' +
                 ", optional=" + optional +
                 ", variadic=" + variadic +

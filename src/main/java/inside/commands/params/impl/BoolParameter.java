@@ -3,10 +3,10 @@ package inside.commands.params.impl;
 import arc.func.Prov;
 import inside.commands.MessageService;
 import inside.commands.params.BaseDefaultValueParameter;
-import inside.commands.params.keys.*;
-
-import java.util.Objects;
-import java.util.Optional;
+import inside.commands.params.keys.MandatorySingleKey;
+import inside.commands.params.keys.OptionalSingleKey;
+import inside.commands.params.keys.SingleKey;
+import inside.commands.util.DerivedProv;
 
 public class BoolParameter extends BaseDefaultValueParameter<Boolean> {
 
@@ -31,7 +31,7 @@ public class BoolParameter extends BaseDefaultValueParameter<Boolean> {
     }
 
     public static BoolParameter from(OptionalSingleKey<Boolean> key, Boolean defaultValue) {
-        return new BoolParameter(key, () -> defaultValue);
+        return new BoolParameter(key, DerivedProv.of(defaultValue));
     }
 
     @Override
@@ -54,14 +54,5 @@ public class BoolParameter extends BaseDefaultValueParameter<Boolean> {
                 yield null;
             }
         };
-    }
-
-    @Override
-    public String toString() {
-        return "BoolParameter{" +
-                "name='" + name + '\'' +
-                ", optional=" + optional +
-                ", variadic=" + variadic +
-                '}';
     }
 }

@@ -73,6 +73,6 @@ public class SaveParameter extends BaseParameter<Fi> {
                 ", name='" + name + '\'' +
                 ", optional=" + optional +
                 ", variadic=" + variadic +
-                "} " + super.toString();
+                '}';
     }
 }

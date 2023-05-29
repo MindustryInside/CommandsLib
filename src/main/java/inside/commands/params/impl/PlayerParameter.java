@@ -73,6 +73,6 @@ public class PlayerParameter extends BaseParameter<Player> {
                 ", name='" + name + '\'' +
                 ", optional=" + optional +
                 ", variadic=" + variadic +
-                "} " + super.toString();
+                '}';
     }
 }

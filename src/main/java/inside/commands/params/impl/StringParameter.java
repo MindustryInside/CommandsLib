@@ -3,11 +3,9 @@ package inside.commands.params.impl;
 import arc.func.Prov;
 import inside.commands.MessageService;
 import inside.commands.params.BaseDefaultValueParameter;
-import inside.commands.params.BaseParameter;
-import inside.commands.params.keys.MandatorySingleKey;
 import inside.commands.params.keys.OptionalKey;
-import inside.commands.params.keys.OptionalSingleKey;
 import inside.commands.params.keys.ParameterKey;
+import inside.commands.util.DerivedProv;
 
 public class StringParameter extends BaseDefaultValueParameter<String> {
 
@@ -28,7 +26,7 @@ public class StringParameter extends BaseDefaultValueParameter<String> {
     }
 
     public static StringParameter from(OptionalKey<String> key, String defaultValue) {
-        return new StringParameter(key, () -> defaultValue);
+        return new StringParameter(key, DerivedProv.of(defaultValue));
     }
 
     @Override
@@ -38,20 +36,11 @@ public class StringParameter extends BaseDefaultValueParameter<String> {
 
     @Override
     public StringParameter withDefault(String defaultValue) {
-        return new StringParameter(this, () -> defaultValue);
+        return new StringParameter(this, DerivedProv.of(defaultValue));
     }
 
     @Override
     public String parse(MessageService service, String value) {
         return value;
-    }
-
-    @Override
-    public String toString() {
-        return "StringParameter{" +
-                "name='" + name + '\'' +
-                ", optional=" + optional +
-                ", variadic=" + variadic +
-                "} " + super.toString();
     }
 }
