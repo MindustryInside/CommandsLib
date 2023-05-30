@@ -16,6 +16,7 @@ import static mindustry.server.ServerControl.instance;
 public final class CommandManager {
 
     int parameterMenuId;
+    int parameterTextInputMenuId;
     final ObjectMap<String, MenuContext> menuContexts = new ObjectMap<>();
 
     final ObjectMap<String, ClientCommandDescriptor> clientCommands = new ObjectMap<>();
@@ -29,6 +30,7 @@ public final class CommandManager {
     BundleProvider bundleProvider = SimpleBundleProvider.INSTANCE;
 
     public CommandManager() {
+        // TODO небезопасная инициализация если создавать в конструкторе плагина
         this(netServer.clientCommands, instance.handler);
     }
 
@@ -40,7 +42,7 @@ public final class CommandManager {
     private void initializeMenuSupport() {
         parameterMenuId = Menus.registerMenu((player, option) -> {
             if (option == -1) {
-                player.sendMessage("Ну и зачем надо было закрывать меню?");
+                // player.sendMessage("Ну и зачем надо было закрывать меню?");
                 menuContexts.remove(player.uuid());
                 return;
             }
@@ -71,21 +73,38 @@ public final class CommandManager {
         };
     }
 
-    public void setClientHandler(CommandHandler clientHandler) {
+    private void initializeTextInputSupport() {
+        parameterTextInputMenuId = Menus.registerTextInput((player, text) -> {
+            if (text == null) {
+                // player.sendMessage("Ну и зачем надо было закрывать меню?");
+                menuContexts.remove(player.uuid());
+                return;
+            }
+
+            var ctx = menuContexts.get(player.uuid());
+            ctx.onTextInput(text);
+        });
+    }
+
+    public CommandManager setClientHandler(CommandHandler clientHandler) {
         if (this.clientHandler != null) {
             throw new IllegalStateException("Client handler cannot be replaced");
         }
 
         this.clientHandler = Objects.requireNonNull(clientHandler);
+
         initializeMenuSupport();
+        initializeTextInputSupport();
+        return this;
     }
 
-    public void setServerHandler(CommandHandler serverHandler) {
+    public CommandManager setServerHandler(CommandHandler serverHandler) {
         if (this.serverHandler != null) {
             throw new IllegalStateException("Server handler cannot be replaced");
         }
 
         this.serverHandler = Objects.requireNonNull(serverHandler);
+        return this;
     }
 
     public CommandManager setMessageServiceFactory(MessageService.Factory factory) {
