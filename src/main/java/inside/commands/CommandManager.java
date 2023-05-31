@@ -192,12 +192,4 @@ public final class CommandManager {
                 })
                 .filter(command -> includeAliases || !command.alias());
     }
-
-
-    public String localiseParams(ClientCommandInfo command, Player player) {
-        return bundleProvider.get( bundleProvider.commandsPrefix() + "." + command.name() + ".params", bundleProvider.getLocale(player));
-    }
-    public String localiseDescription(ClientCommandInfo command, Player player) {
-        return bundleProvider.get( bundleProvider.commandsPrefix() + "." + command.name() + ".description", bundleProvider.getLocale(player));
-    }
 }

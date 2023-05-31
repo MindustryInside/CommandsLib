@@ -8,12 +8,14 @@ public sealed interface ClientCommandInfo extends CommandInfo {
 
     boolean admin();
 
-    default String localiseParams(Player player) {
-        return "";
+    default String localiseParams(CommandManager manager, Player player) {
+        String key = manager.bundleProvider.commandsPrefix() + "." + name() + ".params";
+        return manager.bundleProvider.get(key, manager.bundleProvider.getLocale(player));
     }
 
-    default String localiseDescription(Player player) {
-        return "";
+    default String localiseDescription(CommandManager manager, Player player) {
+        String key = manager.bundleProvider.commandsPrefix() + "." + name() + ".description";
+        return manager.bundleProvider.get(key, manager.bundleProvider.getLocale(player));
     }
 }
 
