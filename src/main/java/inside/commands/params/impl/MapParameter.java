@@ -1,29 +1,24 @@
 package inside.commands.params.impl;
 
 import inside.commands.MessageService;
-import inside.commands.params.BaseParameter;
 import inside.commands.params.keys.SingleKey;
 import inside.commands.util.*;
 import mindustry.maps.Map;
 
 import java.util.*;
 
-public class MapParameter extends BaseParameter<Map> {
-
-    protected final Set<SearchOption> options;
+public class MapParameter extends SearchParameter<Map> {
 
     protected MapParameter(SingleKey<Map> key) {
-        this(key, EnumSet.allOf(SearchOption.class));
+        super(key);
     }
 
     protected MapParameter(SingleKey<Map> key, Set<SearchOption> options) {
-        super(key);
-        this.options = options;
+        super(key, options);
     }
 
     protected MapParameter(MapParameter copy, Set<SearchOption> options) {
-        super(copy);
-        this.options = options;
+        super(copy, options);
     }
 
     public static MapParameter from(SingleKey<Map> key) {
@@ -34,10 +29,7 @@ public class MapParameter extends BaseParameter<Map> {
         return new MapParameter(key, options);
     }
 
-    public Set<SearchOption> options() {
-        return options;
-    }
-
+    @Override
     public MapParameter withOptions(SearchOption... options) {
         var newOptions = EnumSet.copyOf(Arrays.asList(options));
         if (newOptions.equals(this.options)) return this;
@@ -45,6 +37,7 @@ public class MapParameter extends BaseParameter<Map> {
         return new MapParameter(this, newOptions);
     }
 
+    @Override
     public MapParameter withOptions(Collection<SearchOption> options) {
         var newOptions = EnumSet.copyOf(options);
         if (newOptions.equals(this.options)) return this;

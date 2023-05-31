@@ -2,28 +2,23 @@ package inside.commands.params.impl;
 
 import arc.files.Fi;
 import inside.commands.MessageService;
-import inside.commands.params.BaseParameter;
 import inside.commands.params.keys.SingleKey;
 import inside.commands.util.*;
 
 import java.util.*;
 
-public class SaveParameter extends BaseParameter<Fi> {
-
-    protected final Set<SearchOption> options;
+public class SaveParameter extends SearchParameter<Fi> {
 
     protected SaveParameter(SingleKey<Fi> key) {
-        this(key, EnumSet.allOf(SearchOption.class));
+        super(key);
     }
 
     protected SaveParameter(SingleKey<Fi> key, Set<SearchOption> options) {
-        super(key);
-        this.options = options;
+        super(key, options);
     }
 
     protected SaveParameter(SaveParameter copy, Set<SearchOption> options) {
-        super(copy);
-        this.options = options;
+        super(copy, options);
     }
 
     public static SaveParameter from(SingleKey<Fi> key) {
@@ -34,10 +29,7 @@ public class SaveParameter extends BaseParameter<Fi> {
         return new SaveParameter(key, options);
     }
 
-    public Set<SearchOption> options() {
-        return options;
-    }
-
+    @Override
     public SaveParameter withOptions(SearchOption... options) {
         var newOptions = EnumSet.copyOf(Arrays.asList(options));
         if (newOptions.equals(this.options)) return this;
@@ -45,6 +37,7 @@ public class SaveParameter extends BaseParameter<Fi> {
         return new SaveParameter(this, newOptions);
     }
 
+    @Override
     public SaveParameter withOptions(Collection<SearchOption> options) {
         var newOptions = EnumSet.copyOf(options);
         if (newOptions.equals(this.options)) return this;

@@ -21,7 +21,7 @@ public class MenuSpec {
         return this;
     }
 
-    public MenuSpec textInputSpec(Cons<TextInputSpec> action) {
+    public MenuSpec input(Cons<TextInputSpec> action) {
         if (optionsSpec != null) {
             throw new IllegalStateException("You cannot configure text input for option menu");
         }

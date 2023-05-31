@@ -1,29 +1,24 @@
 package inside.commands.params.impl;
 
 import inside.commands.MessageService;
-import inside.commands.params.BaseParameter;
 import inside.commands.params.keys.SingleKey;
 import inside.commands.util.*;
 import mindustry.gen.Player;
 
 import java.util.*;
 
-public class PlayerParameter extends BaseParameter<Player> {
-
-    protected final Set<SearchOption> options;
+public class PlayerParameter extends SearchParameter<Player> {
 
     protected PlayerParameter(SingleKey<Player> key) {
-        this(key, EnumSet.allOf(SearchOption.class));
+        super(key);
     }
 
     protected PlayerParameter(SingleKey<Player> key, Set<SearchOption> options) {
-        super(key);
-        this.options = options;
+        super(key, options);
     }
 
     protected PlayerParameter(PlayerParameter copy, Set<SearchOption> options) {
-        super(copy);
-        this.options = options;
+        super(copy, options);
     }
 
     public static PlayerParameter from(SingleKey<Player> key) {
@@ -34,10 +29,7 @@ public class PlayerParameter extends BaseParameter<Player> {
         return new PlayerParameter(key, options);
     }
 
-    public Set<SearchOption> options() {
-        return options;
-    }
-
+    @Override
     public PlayerParameter withOptions(SearchOption... options) {
         var newOptions = EnumSet.copyOf(Arrays.asList(options));
         if (newOptions.equals(this.options)) return this;
@@ -45,6 +37,7 @@ public class PlayerParameter extends BaseParameter<Player> {
         return new PlayerParameter(this, newOptions);
     }
 
+    @Override
     public PlayerParameter withOptions(Collection<SearchOption> options) {
         var newOptions = EnumSet.copyOf(options);
         if (newOptions.equals(this.options)) return this;
