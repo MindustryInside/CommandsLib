@@ -10,22 +10,17 @@ public enum SimpleBundleProvider implements BundleProvider {
     INSTANCE;
 
     @Override
-    public String errorsPrefix() {
-        return "commands";
-    }
-
-    @Override
     public Locale getLocale(Player player) {
-        return Locale.ROOT;
+        return Locale.ENGLISH;
     }
 
     @Override
-    public String get(Locale locale, String key) {
+    public String get(String key, Locale locale) {
         return key;
     }
 
     @Override
-    public String format(Locale locale, String key, Object... values) {
+    public String format(String key, Locale locale, Object... values) {
         MessageFormat format = new MessageFormat(key, locale);
         return format.format(values);
     }

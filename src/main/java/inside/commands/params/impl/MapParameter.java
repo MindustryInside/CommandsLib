@@ -56,10 +56,10 @@ public class MapParameter extends BaseParameter<Map> {
     public Map parse(MessageService service, String value) {
         var maps = Search.maps(value, options);
         if (maps.isEmpty()) {
-            service.sendError(service.error("map-not-found"), value);
+            service.sendError(service.prefix("map-not-found"), value);
             return null;
         } else if (maps.size > 1) {
-            service.sendError(service.error("too-many-maps-found"), value);
+            service.sendError(service.prefix("too-many-maps-found"), value);
             return null;
         }
 

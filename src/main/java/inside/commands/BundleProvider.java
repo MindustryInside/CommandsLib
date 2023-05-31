@@ -6,11 +6,13 @@ import java.util.Locale;
 
 public interface BundleProvider {
 
-    String errorsPrefix();
+    default String commandsPrefix() {
+        return "commands";
+    }
 
     Locale getLocale(Player player);
 
-    String get(Locale locale, String key);
+    String get(String key, Locale locale);
 
-    String format(Locale locale, String key, Object... values);
+    String format(String key, Locale locale, Object... values);
 }

@@ -79,17 +79,17 @@ public class IntParameter extends BaseDefaultValueParameter<Integer> {
         try {
             val = Integer.parseInt(value);
         } catch (NumberFormatException e) {
-            service.sendError(service.error("invalid-number"), value);
+            service.sendError(service.prefix("invalid-number"), value);
             return null;
         }
 
         if (minValue != null && val < minValue) {
-            service.sendError(service.error("less-than-min"), minValue);
+            service.sendError(service.prefix("less-than-min"), minValue);
             return null;
         }
 
         if (maxValue != null && val > maxValue) {
-            service.sendError(service.error("greater-than-max"), maxValue);
+            service.sendError(service.prefix("greater-than-max"), maxValue);
             return null;
         }
 

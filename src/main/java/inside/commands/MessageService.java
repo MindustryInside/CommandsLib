@@ -6,8 +6,8 @@ import java.util.Locale;
 
 public interface MessageService {
 
-    default String error(String key) {
-        return bundle().errorsPrefix() + '.' + key;
+    default String prefix(String key) {
+        return bundle().commandsPrefix() + '.' + key;
     }
 
     Locale locale();

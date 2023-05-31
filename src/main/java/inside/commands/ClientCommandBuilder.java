@@ -64,9 +64,9 @@ public final class ClientCommandBuilder extends CommandBuilder {
             throw new IllegalStateException("'player' must be present for client commands");
         }
 
-        ClientMessageService messageService = manager.messageServiceFactory.createClient(manager.bundleProvider, player);
+        ClientMessageService service = manager.messageServiceFactory.createClient(manager.bundleProvider, player);
         if (admin && !player.admin) {
-            messageService.sendError(messageService.error("admin-only"));
+            service.sendError(service.prefix("admin-only"));
             return;
         }
 
@@ -74,7 +74,7 @@ public final class ClientCommandBuilder extends CommandBuilder {
         int i = 0;
         for (; i < args.length; i++) {
             var p = parameters.get(i);
-            Object parsed = p.parse(messageService, args[i]);
+            Object parsed = p.parse(service, args[i]);
             if (parsed == null) {
                 return;
             }
@@ -89,6 +89,6 @@ public final class ClientCommandBuilder extends CommandBuilder {
             }
         }
 
-        handler.get(new ClientCommandContext(parsedParams, messageService));
+        handler.get(new ClientCommandContext(parsedParams, service));
     }
 }

@@ -1,6 +1,6 @@
 package inside.commands.simple;
 
-import arc.util.Log;
+import arc.util.*;
 import inside.commands.BundleProvider;
 import inside.commands.ClientMessageService;
 import inside.commands.MessageService;
@@ -48,21 +48,21 @@ public class SimpleMessageService implements ClientMessageService {
 
     @Override
     public void sendError(String format, Object... values) {
-        String bundled = bundle.format(locale, format, values);
+        String bundled = bundle.format(format, locale, values);
         if (player != null) {
             player.sendMessage(bundled);
         } else {
-            Log.err(bundled);
+            Log.err(Strings.stripColors(Strings.stripGlyphs(bundled)));
         }
     }
 
     @Override
     public void sendMessage(String format, Object... values) {
-        String bundled = bundle.format(locale, format, values);
+        String bundled = bundle.format(format, locale, values);
         if (player != null) {
             player.sendMessage(bundled);
         } else {
-            Log.info(bundled);
+            Log.info(Strings.stripColors(Strings.stripGlyphs(bundled)));
         }
     }
 
@@ -77,14 +77,14 @@ public class SimpleMessageService implements ClientMessageService {
     @Override
     public void announce(Player target, String format, Object... values) {
         Locale locale = bundle.getLocale(target);
-        String bundled = bundle.format(locale, format, values);
+        String bundled = bundle.format(format, locale, values);
         Call.announce(target.con, bundled);
     }
 
     @Override
     public void sendMessage(Player target, String format, Object... values) {
         Locale locale = bundle.getLocale(target);
-        String bundled = bundle.format(locale, format, values);
+        String bundled = bundle.format(format, locale, values);
         target.sendMessage(bundled);
     }
 }

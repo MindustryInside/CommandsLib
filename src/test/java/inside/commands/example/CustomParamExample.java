@@ -70,7 +70,7 @@ class CustomParamExample {
         public String parse(MessageService service, String value) {
             String role = getRole(value);
             if (role == null) {
-                service.sendError(service.error("invalid-name"), name);
+                service.sendError(service.prefix("invalid-name"), name);
                 return null;
             }
             return role;

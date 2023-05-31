@@ -50,7 +50,7 @@ public class BoolParameter extends BaseDefaultValueParameter<Boolean> {
             case "y", "yes", "true" -> true;
             case "n", "no", "false" -> false;
             default -> {
-                service.sendError(service.error("invalid-boolean"), value);
+                service.sendError(service.prefix("invalid-boolean"), value);
                 yield null;
             }
         };

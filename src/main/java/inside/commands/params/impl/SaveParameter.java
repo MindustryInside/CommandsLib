@@ -56,10 +56,10 @@ public class SaveParameter extends BaseParameter<Fi> {
     public Fi parse(MessageService service, String value) {
         var saves = Search.saves(value, options);
         if (saves.isEmpty()) {
-            service.sendError(service.error("save-not-found"), value);
+            service.sendError(service.prefix("save-not-found"), value);
             return null;
         } else if (saves.size > 1) {
-            service.sendError(service.error("too-many-saves-found"), value);
+            service.sendError(service.prefix("too-many-saves-found"), value);
             return null;
         }
 

@@ -76,6 +76,10 @@ public class MenuContext {
         return parameters.length;
     }
 
+    public int values() {
+        return values.length;
+    }
+
     void createMenu() {
         var currentParameter = parameters[stage];
         MenuSpec spec = new MenuSpec();
@@ -86,8 +90,8 @@ public class MenuContext {
             throw new IllegalStateException("Menu type is unspecified");
         }
 
-        String title = messageService.bundle().format(messageService.locale(), spec.title, stage + 1);
-        String message = messageService.bundle().format(messageService.locale(), spec.message, currentParameter.name());
+        String title = messageService.bundle().format(spec.title, messageService.locale(),stage + 1);
+        String message = messageService.bundle().format(spec.message, messageService.locale(), currentParameter.name());
 
         if (spec.textInputSpec != null) {
             Call.textInput(messageService.player().con, manager.parameterTextInputMenuId, title, message,

@@ -56,10 +56,10 @@ public class PlayerParameter extends BaseParameter<Player> {
     public Player parse(MessageService service, String value) {
         var players = Search.players(value, options);
         if (players.isEmpty()) {
-            service.sendError(service.error("player-not-found"), value);
+            service.sendError(service.prefix("player-not-found"), value);
             return null;
         } else if (players.size > 1) {
-            service.sendError(service.error("too-many-players-found"), value);
+            service.sendError(service.prefix("too-many-players-found"), value);
             return null;
         }
 
