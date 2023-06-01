@@ -49,4 +49,15 @@ public class ContentParameter<T extends UnlockableContent> extends SearchParamet
 
         return new ContentParameter<>(this, newOptions);
     }
+
+    @Override
+    public String toString() {
+        return "ContentParameter{" +
+                "type=" + type +
+                ", options=" + options +
+                ", name='" + name + '\'' +
+                ", optional=" + optional +
+                ", variadic=" + variadic +
+                '}';
+    }
 }

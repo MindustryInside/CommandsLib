@@ -11,8 +11,4 @@ public enum SearchOption {
     // Player
     USE_UUID,
     USE_IP,
-
-    // Map
-    CUSTOM_MAPS,
-    BUILTIN_MAPS,
 }

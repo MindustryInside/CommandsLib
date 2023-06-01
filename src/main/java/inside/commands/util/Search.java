@@ -1,8 +1,9 @@
 package inside.commands.util;
 
 import arc.files.Fi;
-import arc.func.Boolf2;
+import arc.struct.ObjectMap.Values;
 import arc.struct.Seq;
+import arc.util.Reflect;
 import arc.util.Strings;
 import arc.util.Structs;
 import mindustry.ctype.ContentType;
@@ -11,70 +12,81 @@ import mindustry.game.Team;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.maps.Map;
+import mindustry.net.Administration.PlayerInfo;
 
-import java.util.*;
+import java.util.Set;
 
 import static mindustry.Vars.*;
 
 public class Search {
 
     public static Seq<Player> players(String input, Set<SearchOption> options) {
+        var result = new Seq<Player>();
         int id = parseId(input);
 
-        return Groups.player.copy(new Seq<>(Groups.player.size())).filter(player -> {
-            if (options.contains(SearchOption.USE_ID) && player.id == id)
-                return true;
+        for (var player : Groups.player) {
+            if ((options.contains(SearchOption.USE_ID) && player.id == id)
+                    || (options.contains(SearchOption.USE_UUID) && player.uuid().equals(input))
+                    || (options.contains(SearchOption.USE_IP) && player.ip().equals(input))
+                    || deepEquals(player.name, input, options)
+            ) result.add(player);
+        }
 
-            if (options.contains(SearchOption.USE_UUID) && player.uuid().equals(input))
-                return true;
+        return result;
+    }
 
-            if (options.contains(SearchOption.USE_IP) && player.ip().equals(input))
-                return true;
+    public static Seq<PlayerInfo> playerInfo(String input, Set<SearchOption> options) {
+        var playerInfo = availablePlayerInfo();
+        var result = new Seq<PlayerInfo>();
 
-            return deepEquals(player.name, input, options);
-        });
+        for (var info : playerInfo) {
+            if ((options.contains(SearchOption.USE_UUID) && info.id.equals(input))
+                    || (options.contains(SearchOption.USE_IP) && info.lastIP.equals(input))
+                    || deepEquals(info.lastName, input, options)
+            ) result.add(info);
+        }
+
+        return result;
     }
 
     public static Seq<Map> maps(String input, Set<SearchOption> options) {
-        // subtract one because map IDs are displayed as (1, 2, 3...)
-        int id = parseId(input) - 1;
+        var maps = availableMaps();
 
-        return findInSeq(maps.all(), (index, map) -> {
-            // skip custom maps if needed
-            if (!options.contains(SearchOption.CUSTOM_MAPS) && map.custom)
-                return false;
+        var result = new Seq<Map>();
+        int id = parseId(input) - 1; // subtract one because map IDs are displayed as (1, 2, 3...)
 
-            // skip built-in maps if needed
-            if (!options.contains(SearchOption.BUILTIN_MAPS) && !map.custom)
-                return false;
+        for (int i = 0; i < maps.size; i++) {
+            var map = maps.get(i);
+            if (i == id || deepEquals(map.name(), input, options))
+                result.add(map);
+        }
 
-            if (options.contains(SearchOption.USE_ID) && index == id)
-                return true;
-
-            return deepEquals(map.name(), input, options);
-        });
+        return result;
     }
 
     public static Seq<Fi> saves(String input, Set<SearchOption> options) {
-        // subtract one because save IDs are displayed as (1, 2, 3...)
-        int id = parseId(input) - 1;
+        var saves = availableSaves();
 
-        return findInSeq(saveDirectory.seq().filter(save -> save.extEquals(mapExtension)), (index, save) -> {
-            if (options.contains(SearchOption.USE_ID) && index == id)
-                return true;
+        var result = new Seq<Fi>();
+        int id = parseId(input) - 1; // subtract one because save IDs are displayed as (1, 2, 3...)
 
-            return deepEquals(save.name(), input, options);
-        });
+        for (int i = 0; i < saves.size; i++) {
+            var save = saves.get(i);
+            if (i == id || deepEquals(save.name(), input, options))
+                result.add(save);
+        }
+
+        return result;
     }
 
     public static Team team(String input, Set<SearchOption> options) {
         if (options.contains(SearchOption.USE_ID)) {
             int id = parseId(input);
-            if (id >= 0 && id < 256)
+            if (id >= 0 && id <= 256)
                 return Team.get(id);
         }
 
-        return Structs.find(Team.all, team -> team.name.equals(options.contains(SearchOption.IGNORE_CASE) ? input.toLowerCase() : input));
+        return Structs.find(Team.all, team -> team.name.equals(input.toLowerCase()));
     }
 
     public static <T extends UnlockableContent> T content(String input, ContentType type, Set<SearchOption> options) {
@@ -84,31 +96,21 @@ public class Search {
                 return result;
         }
 
-        return content.getByName(type, options.contains(SearchOption.IGNORE_CASE) ? input.toLowerCase() : input);
+        return content.getByName(type, input.toLowerCase());
     }
 
     // region utils
 
-    public static <T> Seq<T> findInSeq(Seq<T> values, Boolf2<Integer, T> filter) {
-        var result = new Seq<T>(values.size);
-
-        for (int i = 0; i < values.size; i++) {
-            if (filter.get(i, values.get(i)))
-                result.add(values.get(i));
-        }
-
-        return result;
+    public static Iterable<PlayerInfo> availablePlayerInfo() {
+        return new Values<>(Reflect.get(netServer.admins, "playerInfo"));
     }
 
-    public static <T extends Enum<T>> Seq<T> findInEnum(T[] values, Boolf2<Integer, T> filter) {
-        var result = new Seq<T>(values.length);
+    public static Seq<Map> availableMaps() {
+        return maps.customMaps().any() ? maps.customMaps() : maps.defaultMaps();
+    }
 
-        for (int i = 0; i < values.length; i++) {
-            if (filter.get(i, values[i]))
-                result.add(values[i]);
-        }
-
-        return result;
+    public static Seq<Fi> availableSaves() {
+        return saveDirectory.seq().filter(save -> save.extEquals(mapExtension));
     }
 
     public static int parseId(String input) {
