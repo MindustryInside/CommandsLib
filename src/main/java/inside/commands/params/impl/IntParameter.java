@@ -3,27 +3,18 @@ package inside.commands.params.impl;
 import arc.func.Prov;
 import inside.commands.MessageService;
 import inside.commands.params.BaseDefaultValueParameter;
-import inside.commands.params.keys.*;
+import inside.commands.params.keys.OptionalSingleKey;
+import inside.commands.params.keys.SingleKey;
 import inside.commands.util.DerivedProv;
 
-import java.util.Objects;
 import java.util.Optional;
 
 public class IntParameter extends BaseDefaultValueParameter<Integer> {
-
-    protected final Integer minValue;
-    protected final Integer maxValue;
+    protected Integer minValue;
+    protected Integer maxValue;
 
     protected IntParameter(SingleKey<Integer> key, Prov<? extends Integer> defaultValueProvider) {
         super(key, defaultValueProvider);
-        this.maxValue = null;
-        this.minValue = null;
-    }
-
-    protected IntParameter(IntParameter copy, Prov<? extends Integer> defaultValueProvider, Integer minValue, Integer maxValue) {
-        super(copy, defaultValueProvider);
-        this.maxValue = maxValue;
-        this.minValue = minValue;
     }
 
     /** {@return the <b>min</b> acceptable integer, if present} (exclusive) */
@@ -37,18 +28,19 @@ public class IntParameter extends BaseDefaultValueParameter<Integer> {
     }
 
     public IntParameter withMinValue(Integer minValue) {
-        if (Objects.equals(this.minValue, minValue)) return this;
-        return new IntParameter(this, defaultValueProvider, minValue, maxValue);
+        this.minValue = minValue;
+        return this;
     }
 
     public IntParameter withMaxValue(Integer maxValue) {
-        if (Objects.equals(this.maxValue, maxValue)) return this;
-        return new IntParameter(this, defaultValueProvider, minValue, maxValue);
+        this.maxValue = maxValue;
+        return this;
     }
 
     public IntParameter withRange(Integer minValue, Integer maxValue) {
-        if (Objects.equals(this.minValue, minValue) && Objects.equals(this.maxValue, maxValue)) return this;
-        return new IntParameter(this, defaultValueProvider, minValue, maxValue);
+        this.minValue = minValue;
+        this.maxValue = maxValue;
+        return this;
     }
 
     public static IntParameter from(SingleKey<Integer> key) {
@@ -61,16 +53,6 @@ public class IntParameter extends BaseDefaultValueParameter<Integer> {
 
     public static IntParameter from(OptionalSingleKey<Integer> key, Integer defaultValue) {
         return new IntParameter(key, DerivedProv.of(defaultValue));
-    }
-
-    @Override
-    public IntParameter withDefault(Prov<? extends Integer> defaultValueProvider) {
-        return new IntParameter(this, defaultValueProvider, minValue, maxValue);
-    }
-
-    @Override
-    public IntParameter withDefault(Integer defaultValue) {
-        return new IntParameter(this, DerivedProv.of(defaultValue), minValue, maxValue);
     }
 
     @Override
@@ -98,13 +80,13 @@ public class IntParameter extends BaseDefaultValueParameter<Integer> {
 
     @Override
     public String toString() {
-        return "IntParameter{" +
-                "minValue=" + minValue +
-                ", maxValue=" + maxValue +
-                ", defaultValueProvider=" + defaultValueProvider +
-                ", name='" + name + '\'' +
+        return getClass().getSimpleName() + '{' +
+                "name='" + name + '\'' +
                 ", optional=" + optional +
                 ", variadic=" + variadic +
+                ", defaultValueProvider=" + defaultValueProvider +
+                ", minValue=" + minValue +
+                ", maxValue=" + maxValue +
                 '}';
     }
 }

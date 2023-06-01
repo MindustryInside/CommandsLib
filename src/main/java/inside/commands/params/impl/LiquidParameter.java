@@ -17,10 +17,6 @@ public class LiquidParameter extends ContentParameter<Liquid> {
         super(key, ContentType.liquid, options);
     }
 
-    protected LiquidParameter(ContentParameter<Liquid> copy, Set<SearchOption> options) {
-        super(copy, options);
-    }
-
     public static LiquidParameter from(SingleKey<Liquid> key) {
         return new LiquidParameter(key);
     }

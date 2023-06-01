@@ -2,14 +2,10 @@ package inside.commands.params;
 
 import arc.func.Prov;
 import inside.commands.params.keys.ParameterKey;
+import inside.commands.util.DerivedProv;
 
 public abstract class BaseDefaultValueParameter<T> extends BaseParameter<T> implements DefaultValueParameter<T> {
-    protected final Prov<? extends T> defaultValueProvider;
-
-    protected BaseDefaultValueParameter(BaseDefaultValueParameter<T> copy, Prov<? extends T> defaultValueProvider) {
-        super(copy);
-        this.defaultValueProvider = defaultValueProvider;
-    }
+    protected Prov<? extends T> defaultValueProvider;
 
     protected BaseDefaultValueParameter(ParameterKey<T> key, Prov<? extends T> defaultValueProvider) {
         super(key);
@@ -22,10 +18,16 @@ public abstract class BaseDefaultValueParameter<T> extends BaseParameter<T> impl
     }
 
     @Override
-    public abstract BaseDefaultValueParameter<T> withDefault(Prov<? extends T> prov);
+    public BaseDefaultValueParameter<T> withDefault(T value) {
+        this.defaultValueProvider = DerivedProv.of(value);
+        return this;
+    }
 
     @Override
-    public abstract BaseDefaultValueParameter<T> withDefault(T value);
+    public BaseDefaultValueParameter<T> withDefault(Prov<? extends T> defaultValueProvider) {
+        this.defaultValueProvider = defaultValueProvider;
+        return this;
+    }
 
     @Override
     public String toString() {

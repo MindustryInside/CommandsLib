@@ -17,10 +17,6 @@ public class UnitParameter extends ContentParameter<UnitType> {
         super(key, ContentType.unit, options);
     }
 
-    protected UnitParameter(ContentParameter<UnitType> copy, Set<SearchOption> options) {
-        super(copy, options);
-    }
-
     public static UnitParameter from(SingleKey<UnitType> key) {
         return new UnitParameter(key);
     }

@@ -1,13 +1,14 @@
 package inside.commands.params.impl;
 
 import inside.commands.MessageService;
+import inside.commands.params.BaseSearchParameter;
 import inside.commands.params.keys.SingleKey;
 import inside.commands.util.*;
 import mindustry.ctype.*;
 
 import java.util.*;
 
-public class ContentParameter<T extends UnlockableContent> extends SearchParameter<T> {
+public class ContentParameter<T extends UnlockableContent> extends BaseSearchParameter<T> {
     protected final ContentType type;
 
     protected ContentParameter(SingleKey<T> key, ContentType type) {
@@ -20,11 +21,6 @@ public class ContentParameter<T extends UnlockableContent> extends SearchParamet
         this.type = type;
     }
 
-    protected ContentParameter(ContentParameter<T> copy, Set<SearchOption> options) {
-        super(copy, options);
-        this.type = copy.type;
-    }
-
     @Override
     public T parse(MessageService service, String value) {
         var content = Search.<T>content(value, type, options);
@@ -35,29 +31,13 @@ public class ContentParameter<T extends UnlockableContent> extends SearchParamet
     }
 
     @Override
-    public ContentParameter<T> withOptions(SearchOption... options) {
-        var newOptions = EnumSet.copyOf(Arrays.asList(options));
-        if (newOptions.equals(this.options)) return this;
-
-        return new ContentParameter<>(this, newOptions);
-    }
-
-    @Override
-    public ContentParameter<T> withOptions(Collection<SearchOption> options) {
-        var newOptions = EnumSet.copyOf(options);
-        if (newOptions.equals(this.options)) return this;
-
-        return new ContentParameter<>(this, newOptions);
-    }
-
-    @Override
     public String toString() {
-        return "ContentParameter{" +
-                "type=" + type +
-                ", options=" + options +
-                ", name='" + name + '\'' +
+        return getClass().getSimpleName() + '{' +
+                "name='" + name + '\'' +
                 ", optional=" + optional +
                 ", variadic=" + variadic +
+                ", options=" + options +
+                ", type=" + type +
                 '}';
     }
 }

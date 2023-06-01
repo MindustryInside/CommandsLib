@@ -2,12 +2,13 @@ package inside.commands.params.impl;
 
 import arc.files.Fi;
 import inside.commands.MessageService;
+import inside.commands.params.BaseSearchParameter;
 import inside.commands.params.keys.SingleKey;
 import inside.commands.util.*;
 
 import java.util.*;
 
-public class SaveParameter extends SearchParameter<Fi> {
+public class SaveParameter extends BaseSearchParameter<Fi> {
 
     protected SaveParameter(SingleKey<Fi> key) {
         super(key);
@@ -17,32 +18,12 @@ public class SaveParameter extends SearchParameter<Fi> {
         super(key, options);
     }
 
-    protected SaveParameter(SaveParameter copy, Set<SearchOption> options) {
-        super(copy, options);
-    }
-
     public static SaveParameter from(SingleKey<Fi> key) {
         return new SaveParameter(key);
     }
 
     public static SaveParameter from(SingleKey<Fi> key, Set<SearchOption> options) {
         return new SaveParameter(key, options);
-    }
-
-    @Override
-    public SaveParameter withOptions(SearchOption... options) {
-        var newOptions = EnumSet.copyOf(Arrays.asList(options));
-        if (newOptions.equals(this.options)) return this;
-
-        return new SaveParameter(this, newOptions);
-    }
-
-    @Override
-    public SaveParameter withOptions(Collection<SearchOption> options) {
-        var newOptions = EnumSet.copyOf(options);
-        if (newOptions.equals(this.options)) return this;
-
-        return new SaveParameter(this, newOptions);
     }
 
     @Override
@@ -57,15 +38,5 @@ public class SaveParameter extends SearchParameter<Fi> {
         }
 
         return saves.first();
-    }
-
-    @Override
-    public String toString() {
-        return "SaveParameter{" +
-                "options=" + options +
-                ", name='" + name + '\'' +
-                ", optional=" + optional +
-                ", variadic=" + variadic +
-                '}';
     }
 }

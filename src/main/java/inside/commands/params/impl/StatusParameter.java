@@ -17,10 +17,6 @@ public class StatusParameter extends ContentParameter<StatusEffect> {
         super(key, ContentType.status, options);
     }
 
-    protected StatusParameter(ContentParameter<StatusEffect> copy, Set<SearchOption> options) {
-        super(copy, options);
-    }
-
     public static StatusParameter from(SingleKey<StatusEffect> key) {
         return new StatusParameter(key);
     }

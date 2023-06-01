@@ -17,10 +17,6 @@ public class ItemParameter extends ContentParameter<Item> {
         super(key, ContentType.item, options);
     }
 
-    protected ItemParameter(ContentParameter<Item> copy, Set<SearchOption> options) {
-        super(copy, options);
-    }
-
     public static ItemParameter from(SingleKey<Item> key) {
         return new ItemParameter(key);
     }

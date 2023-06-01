@@ -13,10 +13,6 @@ public class StringParameter extends BaseDefaultValueParameter<String> {
         super(key, defaultValueProvider);
     }
 
-    protected StringParameter(StringParameter copy, Prov<? extends String> defaultValueProvider) {
-        super(copy, defaultValueProvider);
-    }
-
     public static StringParameter from(ParameterKey<String> key) {
         return new StringParameter(key, null);
     }
@@ -27,16 +23,6 @@ public class StringParameter extends BaseDefaultValueParameter<String> {
 
     public static StringParameter from(OptionalKey<String> key, String defaultValue) {
         return new StringParameter(key, DerivedProv.of(defaultValue));
-    }
-
-    @Override
-    public StringParameter withDefault(Prov<? extends String> defaultValueProvider) {
-        return new StringParameter(this, defaultValueProvider);
-    }
-
-    @Override
-    public StringParameter withDefault(String defaultValue) {
-        return new StringParameter(this, DerivedProv.of(defaultValue));
     }
 
     @Override

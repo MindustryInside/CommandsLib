@@ -17,10 +17,6 @@ public class BlockParameter extends ContentParameter<Block> {
         super(key, ContentType.block, options);
     }
 
-    protected BlockParameter(ContentParameter<Block> copy, Set<SearchOption> options) {
-        super(copy, options);
-    }
-
     public static BlockParameter from(SingleKey<Block> key) {
         return new BlockParameter(key);
     }

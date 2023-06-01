@@ -82,7 +82,7 @@ public class Search {
     public static Team team(String input, Set<SearchOption> options) {
         if (options.contains(SearchOption.USE_ID)) {
             int id = parseId(input);
-            if (id >= 0 && id <= 256)
+            if (id >= 0 && id < 256)
                 return Team.get(id);
         }
 

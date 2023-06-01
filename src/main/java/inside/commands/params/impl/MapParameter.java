@@ -1,13 +1,14 @@
 package inside.commands.params.impl;
 
 import inside.commands.MessageService;
+import inside.commands.params.BaseSearchParameter;
 import inside.commands.params.keys.SingleKey;
 import inside.commands.util.*;
 import mindustry.maps.Map;
 
 import java.util.*;
 
-public class MapParameter extends SearchParameter<Map> {
+public class MapParameter extends BaseSearchParameter<Map> {
 
     protected MapParameter(SingleKey<Map> key) {
         super(key);
@@ -17,32 +18,12 @@ public class MapParameter extends SearchParameter<Map> {
         super(key, options);
     }
 
-    protected MapParameter(MapParameter copy, Set<SearchOption> options) {
-        super(copy, options);
-    }
-
     public static MapParameter from(SingleKey<Map> key) {
         return new MapParameter(key);
     }
 
     public static MapParameter from(SingleKey<Map> key, Set<SearchOption> options) {
         return new MapParameter(key, options);
-    }
-
-    @Override
-    public MapParameter withOptions(SearchOption... options) {
-        var newOptions = EnumSet.copyOf(Arrays.asList(options));
-        if (newOptions.equals(this.options)) return this;
-
-        return new MapParameter(this, newOptions);
-    }
-
-    @Override
-    public MapParameter withOptions(Collection<SearchOption> options) {
-        var newOptions = EnumSet.copyOf(options);
-        if (newOptions.equals(this.options)) return this;
-
-        return new MapParameter(this, newOptions);
     }
 
     @Override
@@ -57,15 +38,5 @@ public class MapParameter extends SearchParameter<Map> {
         }
 
         return maps.first();
-    }
-
-    @Override
-    public String toString() {
-        return "MapParameter{" +
-                "options=" + options +
-                ", name='" + name + '\'' +
-                ", optional=" + optional +
-                ", variadic=" + variadic +
-                '}';
     }
 }

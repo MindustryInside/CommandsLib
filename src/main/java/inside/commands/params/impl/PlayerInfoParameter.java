@@ -1,13 +1,14 @@
 package inside.commands.params.impl;
 
 import inside.commands.MessageService;
+import inside.commands.params.BaseSearchParameter;
 import inside.commands.params.keys.SingleKey;
 import inside.commands.util.*;
 import mindustry.net.Administration.PlayerInfo;
 
 import java.util.*;
 
-public class PlayerInfoParameter extends SearchParameter<PlayerInfo> {
+public class PlayerInfoParameter extends BaseSearchParameter<PlayerInfo> {
 
     protected PlayerInfoParameter(SingleKey<PlayerInfo> key) {
         super(key);
@@ -17,32 +18,12 @@ public class PlayerInfoParameter extends SearchParameter<PlayerInfo> {
         super(key, options);
     }
 
-    protected PlayerInfoParameter(PlayerInfoParameter copy, Set<SearchOption> options) {
-        super(copy, options);
-    }
-
     public static PlayerInfoParameter from(SingleKey<PlayerInfo> key) {
         return new PlayerInfoParameter(key);
     }
 
     public static PlayerInfoParameter from(SingleKey<PlayerInfo> key, Set<SearchOption> options) {
         return new PlayerInfoParameter(key, options);
-    }
-
-    @Override
-    public PlayerInfoParameter withOptions(SearchOption... options) {
-        var newOptions = EnumSet.copyOf(Arrays.asList(options));
-        if (newOptions.equals(this.options)) return this;
-
-        return new PlayerInfoParameter(this, newOptions);
-    }
-
-    @Override
-    public PlayerInfoParameter withOptions(Collection<SearchOption> options) {
-        var newOptions = EnumSet.copyOf(options);
-        if (newOptions.equals(this.options)) return this;
-
-        return new PlayerInfoParameter(this, newOptions);
     }
 
     @Override
@@ -57,15 +38,5 @@ public class PlayerInfoParameter extends SearchParameter<PlayerInfo> {
         }
 
         return playerInfo.first();
-    }
-
-    @Override
-    public String toString() {
-        return "PlayerInfoParameter{" +
-                "options=" + options +
-                ", name='" + name + '\'' +
-                ", optional=" + optional +
-                ", variadic=" + variadic +
-                '}';
     }
 }
